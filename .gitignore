@@ -1,0 +1,66 @@
+# Datos crudos (no commitear por tamaño)
+data/raw/*.xlsx
+data/raw/*.csv
+data/raw/*.csv.gz
+data/raw/*.zip
+data/raw/*.shp
+data/raw/*.shx
+data/raw/*.dbf
+data/raw/*.prj
+data/raw/*.cpg
+data/raw/*.sbn
+data/raw/*.sbx
+data/raw/*.fbn
+data/raw/*.fbx
+data/raw/*.ain
+data/raw/*.aih
+data/raw/*.atx
+data/raw/*.ixs
+data/raw/*.mxs
+data/raw/*.qix
+data/raw/*.qpj
+data/raw/*.xml
+
+# Capturas de la conferencia (grandes, locales unicamente)
+docs/**/*.jpg
+docs/**/*.JPG
+docs/**/*.jpeg
+docs/**/*.png
+
+# Procesado (regenerable desde raw con scripts/)
+data/processed/
+data/output/
+
+# Node
+node_modules/
+.pnpm-store/
+dist/
+.astro/
+.vercel/
+*.log
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Entorno
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
