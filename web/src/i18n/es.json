@@ -10,7 +10,8 @@
     "map": "Mapa",
     "methodology": "Metodología",
     "islands": "Por isla",
-    "data": "Datos"
+    "data": "Datos",
+    "press": "Prensa"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -203,5 +204,32 @@
     "repro_step2": "Descarga los datos crudos (Inside Airbnb, INE, HUT, IBESTAT) a data/raw/",
     "repro_step3": "Ejecuta los scripts en orden 01 → 06",
     "repo_link_label": "Repositorio en GitHub"
+  },
+  "press": {
+    "title": "Prensa",
+    "lead": "Material para periodistas y medios que quieran cubrir el tema. Cifras citables, bio del proyecto y contacto.",
+    "section_quoteable_title": "Cifras citables",
+    "section_quoteable_lead": "Una frase por dato. Todas con fuente pública. Puedes reproducirlas libremente con atribución a Cases Tancades.",
+    "section_bio_title": "Sobre el proyecto",
+    "section_bio_body": "Cases Tancades es una iniciativa ciudadana independiente que cruza datos oficiales de vivienda semi-vacía con alquiler turístico en las Islas Baleares. El proyecto no tiene afiliación política ni financiación pública o privada. El código y los datos se publican bajo licencia abierta para facilitar la verificación y la difusión.",
+    "section_contact_title": "Contacto",
+    "section_contact_body": "Para peticiones de medios, entrevistas o verificación de datos:",
+    "contact_email_label": "Correo electrónico",
+    "contact_response_label": "Tiempo de respuesta",
+    "contact_response_value": "24-48 horas en días laborables",
+    "section_assets_title": "Recursos gráficos",
+    "section_assets_lead": "Imágenes y gráficos para acompañar tu pieza. Licencia abierta.",
+    "asset_og_title": "Open Graph (redes)",
+    "asset_og_desc": "1200×630 px, PNG. La imagen que aparece cuando se comparte la URL en Twitter/X, WhatsApp, LinkedIn, etc.",
+    "asset_tiles_title": "Tiles del mapa",
+    "asset_tiles_desc": "Vector tiles z0–z13. Capa 'cases' con secciones censales. Carga directa en MapLibre.",
+    "asset_data_title": "Datos",
+    "asset_data_desc": "Todos los datasets en /dades, formatos abiertos (CSV, Parquet, GeoJSON).",
+    "section_how_to_title": "Cómo citar",
+    "cite_1": "Según el análisis de Cases Tancades, con datos de Inside Airbnb (junio 2026)...",
+    "cite_2": "De acuerdo con el registro HUT del Consell d'Eivissa...",
+    "cite_3": "Según datos del INE (2024)...",
+    "section_disclaimer_title": "Aviso legal",
+    "disclaimer_body": "Todos los datos provienen de fuentes públicas oficiales o abiertas. No hacemos ninguna acusación individual. Si detectas un error, escríbenos y lo corregiremos."
   }
 }

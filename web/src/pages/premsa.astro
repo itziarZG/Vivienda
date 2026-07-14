@@ -1,0 +1,179 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+
+// TODO: substituir per correu real quan es decideixi. Format actual: premsa@<domini>
+const CONTACT_EMAIL = "premsa@casestancades.cat";
+
+interface Quoteable {
+  number: string;
+  text: string;
+  source: string;
+}
+
+const quoteables: Quoteable[] = [
+  {
+    number: "18.175",
+    text: "Listings actius a Airbnb a Mallorca i Menorca",
+    source: "Inside Airbnb, juny 2026",
+  },
+  {
+    number: "18.184",
+    text: "Places turístiques legals (HUT) a Eivissa",
+    source: "Registre HUT Consell d'Eivissa, 14 juliol 2026",
+  },
+  {
+    number: "40%",
+    text: "De les places HUT d'Eivissa es concentren a Sant Josep de sa Talaia",
+    source: "Elaboració pròpia a partir del registre HUT",
+  },
+  {
+    number: "16,2%",
+    text: "D'habitatges buits a Balears",
+    source: "INE, 2024",
+  },
+  {
+    number: "$258M",
+    text: "Ingressos estimats d'Airbnb els darrers 365 dies, Mallorca + Menorca",
+    source: "Inside Airbnb, juny 2026",
+  },
+  {
+    number: "95,4%",
+    text: "Dels listings actius són pisos sencers (Entire home/apt)",
+    source: "Inside Airbnb, juny 2026",
+  },
+];
+
+const description = t(lang, "press.lead");
+---
+
+<Base
+  lang={lang}
+  active="press"
+  title={t(lang, "press.title")}
+  description={description}
+>
+  <section class="bg-gradient-to-b from-orange-50 to-stone-50 border-b border-stone-200">
+    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
+        {t(lang, "press.title")}
+      </h1>
+      <p class="text-base sm:text-lg text-stone-700 max-w-2xl mx-auto">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "press.section_quoteable_title")}
+    </h2>
+    <p class="text-stone-600 mb-6">{t(lang, "press.section_quoteable_lead")}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {quoteables.map((q) => (
+        <blockquote class="border-l-4 border-orange-700 bg-white p-4 rounded-r">
+          <p class="text-3xl font-bold text-orange-700 tabular-nums mb-1">{q.number}</p>
+          <p class="text-stone-800 mb-2">{q.text}</p>
+          <cite class="text-xs text-stone-500 not-italic">— {q.source}</cite>
+        </blockquote>
+      ))}
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
+      {t(lang, "press.section_bio_title")}
+    </h2>
+    <p class="text-stone-700 leading-relaxed text-lg">
+      {t(lang, "press.section_bio_body")}
+    </p>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "press.section_contact_title")}
+    </h2>
+    <p class="text-stone-700 mb-4">{t(lang, "press.section_contact_body")}</p>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+      <div class="bg-white border border-stone-200 rounded p-4">
+        <dt class="text-xs uppercase tracking-wide text-stone-500 mb-1">
+          {t(lang, "press.contact_email_label")}
+        </dt>
+        <dd>
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            class="text-orange-700 hover:text-orange-800 font-medium underline break-all"
+          >
+            {CONTACT_EMAIL}
+          </a>
+        </dd>
+      </div>
+      <div class="bg-white border border-stone-200 rounded p-4">
+        <dt class="text-xs uppercase tracking-wide text-stone-500 mb-1">
+          {t(lang, "press.contact_response_label")}
+        </dt>
+        <dd class="text-stone-800 font-medium">{t(lang, "press.contact_response_value")}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "press.section_assets_title")}
+    </h2>
+    <p class="text-stone-600 mb-6">{t(lang, "press.section_assets_lead")}</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <a
+        href="/og-image.png"
+        download
+        class="block border border-stone-200 rounded-lg p-5 bg-white hover:border-orange-700 transition-colors"
+      >
+        <h3 class="font-bold text-orange-700 mb-1">{t(lang, "press.asset_og_title")}</h3>
+        <p class="text-sm text-stone-600 mb-3">{t(lang, "press.asset_og_desc")}</p>
+        <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">/og-image.png</code>
+      </a>
+      <a
+        href="/tiles/dataset.pmtiles"
+        download
+        class="block border border-stone-200 rounded-lg p-5 bg-white hover:border-orange-700 transition-colors"
+      >
+        <h3 class="font-bold text-orange-700 mb-1">{t(lang, "press.asset_tiles_title")}</h3>
+        <p class="text-sm text-stone-600 mb-3">{t(lang, "press.asset_tiles_desc")}</p>
+        <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">/tiles/dataset.pmtiles</code>
+      </a>
+      <a
+        href="/dades"
+        class="block border border-stone-200 rounded-lg p-5 bg-white hover:border-orange-700 transition-colors"
+      >
+        <h3 class="font-bold text-orange-700 mb-1">{t(lang, "press.asset_data_title")}</h3>
+        <p class="text-sm text-stone-600 mb-3">{t(lang, "press.asset_data_desc")}</p>
+        <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">/dades</code>
+      </a>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
+      {t(lang, "press.section_how_to_title")}
+    </h2>
+    <ul class="space-y-2 text-stone-700 list-disc pl-5">
+      <li>{t(lang, "press.cite_1")}</li>
+      <li>{t(lang, "press.cite_2")}</li>
+      <li>{t(lang, "press.cite_3")}</li>
+    </ul>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <div class="bg-stone-100 border-l-4 border-stone-400 p-4 rounded-r">
+      <h2 class="text-lg font-bold text-stone-900 mb-2">
+        {t(lang, "press.section_disclaimer_title")}
+      </h2>
+      <p class="text-stone-700 leading-relaxed">
+        {t(lang, "press.disclaimer_body")}
+      </p>
+    </div>
+  </section>
+</Base>
