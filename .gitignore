@@ -1,4 +1,6 @@
 # Datos crudos (no commitear por tamaño)
+data/raw/*.xls
+data/raw/*.xls*
 data/raw/*.xlsx
 data/raw/*.csv
 data/raw/*.csv.gz
@@ -24,6 +26,8 @@ data/raw/*.gpkg
 data/raw/*.parquet
 data/raw/*.pmtiles
 data/raw/*.geojson
+data/raw/*.html
+data/raw/*.htm
 
 # Capturas de la conferencia (grandes, locales unicamente)
 docs/**/*.jpg
@@ -33,7 +37,12 @@ docs/**/*.png
 
 # Procesado (regenerable desde raw con scripts/)
 data/processed/
-data/output/
+
+# Outputs grandes (regenerables; el codigo en scripts/ los reconstruye)
+data/output/dataset.geojson
+data/output/dataset.gpkg
+data/output/.gitkeep
+!data/output/.gitkeep
 
 # Node
 node_modules/

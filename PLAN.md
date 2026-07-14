@@ -48,7 +48,7 @@ Web publica que cruza dos datos oficiales - INE (consumo electrico por seccion c
 - [x] `FASE-0-setup.md` escrito (cerrado)
 - [x] Fase 0 ejecutada: entorno, shapefile, listings Mallorca+Menorca, HUT Eivissa, IBESTAT Formentera
 - [x] Insight clave: legal != realidad. Mallorca/Menorca capturan Airbnb (real), Eivissa/Formentera solo legal. La diferencia ES la denuncia.
-- [ ] Fase 1 ejecutada
+- [x] Fase 1 ejecutada: scripts 01/02/03 reproducibles, dataset.parquet + tiles.pmtiles generados, STATS.md con 18.175 listings Airbnb y 18.184 plazas HUT
 - [ ] Fase 2 ejecutada
 - [ ] Fase 3 ejecutada
 - [ ] Web publica desplegada en dominio definitivo
@@ -58,3 +58,4 @@ Web publica que cruza dos datos oficiales - INE (consumo electrico por seccion c
 _Espacio para cambios futuros. Cada vez que se ajuste el plan, dejar nota con fecha y razon._
 
 - **2026-07-13** - Plan inicial creado tras revision de datos del usuario y conferencia OHIB. Decisiones cerradas: web publica, ciudadania ibicenca, seccion censal, 4-6 semanas, Inside Airbnb, Balears entero, dev solo, waterfall, documentacion modular.
+- **2026-07-14** - Fase 1 completada. Outputs: `data/output/dataset.parquet` (41KB), `dataset_web.json` (1KB), `tiles.pmtiles` (1.5MB), `STATS.md`. Limitacion documentada: vivienda INE solo a nivel CCAA (no seccion censal). Insight añadido: Sant Josep de sa Talaia (Eivissa) tiene 945 HUT/7.296 plazas vs Eivissa capital 41/236.
