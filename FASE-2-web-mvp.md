@@ -141,12 +141,23 @@ pnpm dlx vercel
 
 ## Decisiones tomadas durante la fase
 
-_Llenar durante la ejecucion._
+1. **Idioma**: catalan primario + toggle a castellano. Implementado con cookie `lang` leida en server-side via `Astro.cookies.get('lang')`. Toggle en el header setea cookie + reload.
+2. **Stack**: Node 22.13.1 + pnpm 11.9.0 + Astro 7.0.9 + Tailwind CSS 4.3.2 + MapLibre GL 5.24.0 + PMTiles 4.4.1. (HANDOFF original decia Node 20, pero Astro 7 requiere Node 22. Decidido tras consulta al usuario.)
+3. **Choropleth mixto por isla** (opcion C del analisis pre-fase): dos capas separadas en MapLibre, una para Mallorca/Menorca (`airbnb_listings` con scale naranja) y otra para Eivissa/Formentera (`hut_plazas` con scale azul). Filtro server-side por `properties.isla` con `match` expression.
+4. **Eivissa/Formentera**: valor de municipio replicado a todas las secciones del municipio (granularidad real). Documentado en popup y en /metodologia.
+5. **Clusters Airbnb**: segunda capa con `cluster: true` (clusterMaxZoom=12, clusterRadius=40). Fuente: `web/public/data/airbnb_listings.geojson` (2.97 MB, ~18K puntos con id, isla, room_type).
+6. **SSR para i18n**: `export const prerender = false` en cada pagina. Sin esto, el cookie no se leia y el toggle no funcionaba (Astro 7 con `output: 'static'` pre-renderiza en build, no ejecuta el frontmatter por request).
+7. **Bug pre-existente arreglado en dataset_web.json**: el script `02_build_dataset.py` hacia SUM de `hut_registros` y `hut_plazas` por seccion, multiplicando los valores de Eivissa (76 secciones x 41 = 3,116 vs 2,364 reales) y Formentera. Creado `scripts/04_regenerate_web_json.py` que lee de los CSVs/JSON raw y agrega correctamente por isla. Script 02 NO modificado (reproducibilidad de Fase 1).
+8. **Bug secundario detectado**: Mallorca y Menorca tenian los mismos totales en el JSON regenerado. Corregido agregando Airbnb por isla individual.
 
 ## Problemas encontrados
 
-_Llenar durante la ejecucion._
+1. **Astro 7 requiere Node 22**, no Node 20 como decia el HANDOFF original. Resuelto con nvm + consulta al usuario (Node 22 + pnpm 9 + Astro 5/7).
+2. **TypeScript 7 incompatible con @astrojs/check** (error `Cannot read properties of undefined`). Downgrade a TypeScript 5.9.3.
+3. **`Astro.request.headers.get('cookie')` no funcionaba** para leer el cookie en SSR. Cambio a `Astro.cookies.get('lang')`.
+4. **Output: 'static' pre-renderiza en Astro 7** incluso en dev, no ejecuta el frontmatter por request. Cambio a SSR con `prerender = false` en cada pagina.
+5. **GeoJSON muy pesado** (3MB) para servir. Considerado pero mantenido en public/ para que Vercel lo sirva estaticamente y la fuente clusters funcione. Alternativa (CSV.gz) descartada porque MapLibre no soporta CSV nativamente.
 
 ## Proximos pasos
 
-Fase 3: lanzamiento publico. Ver `FASE-3-lanzamiento.md`.
+Fase 3: lanzamiento publico. Ver `FASE-3-lanzamiento.md` y `HANDOFF-FASE-3.md`.
