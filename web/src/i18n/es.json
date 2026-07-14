@@ -11,7 +11,8 @@
     "methodology": "Metodología",
     "islands": "Por isla",
     "data": "Datos",
-    "press": "Prensa"
+    "press": "Prensa",
+    "about": "Quiénes somos"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -231,5 +232,24 @@
     "cite_3": "Según datos del INE (2024)...",
     "section_disclaimer_title": "Aviso legal",
     "disclaimer_body": "Todos los datos provienen de fuentes públicas oficiales o abiertas. No hacemos ninguna acusación individual. Si detectas un error, escríbenos y lo corregiremos."
+  },
+  "about": {
+    "title": "Quiénes somos",
+    "lead": "Una iniciativa ciudadana independiente. Sin afiliación política, sin financiación pública o privada. Solo datos, método y código abierto.",
+    "section_who_title": "Quiénes somos",
+    "section_who_p1": "Cases Tancades es un proyecto personal de análisis de datos sobre la vivienda en las Islas Baleares. Nació de la impresión de que el debate público sobre el alquiler turístico se quedaba en opiniones y titulares, sin cifras compartidas y verificables.",
+    "section_who_p2": "El objetivo es poner sobre la mesa una lectura honesta de lo que sabemos y lo que no sabemos. Cruzar datos oficiales existentes — sin inventar ninguno — y hacerlos accesibles a la ciudadanía.",
+    "section_who_p3": "El proyecto no está vinculado a ningún partido político, asociación profesional, empresa ni administración. No recibimos financiación pública ni privada. Si en algún momento se planteara, se haría público aquí.",
+    "section_interest_title": "Conflicto de interés",
+    "section_interest_body": "Ninguno. La autora no tiene propiedades en Baleares, ni participación en empresas turísticas, inmobiliarias o de medios. El objetivo es periodístico y documental, no comercial.",
+    "section_privacy_title": "Privacidad",
+    "section_privacy_body": "Esta web no utiliza ninguna herramienta de analítica ni de seguimiento. No hay Google Analytics, ni Facebook Pixel, ni ninguna cookie de terceros. La única cookie que se guarda es la de preferencia de idioma (ca/es) — sin ella el botón de idioma no funciona.",
+    "section_contribute_title": "Cómo contribuir",
+    "section_contribute_intro": "El proyecto es abierto. Todo el mundo puede colaborar:",
+    "contribute_issues": " Abrir un issue en GitHub si detectas un error en los datos",
+    "contribute_prs": " Enviar un pull request con mejoras al código o nuevas visualizaciones",
+    "contribute_sources": " Proponer nuevas fuentes de datos públicos que se puedan añadir",
+    "contribute_share": " Difundir el proyecto a través de redes o medios",
+    "section_methodology_link": "Para saber cómo hemos hecho el cálculo, consulta la"
   }
 }

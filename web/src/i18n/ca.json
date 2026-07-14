@@ -11,7 +11,8 @@
     "methodology": "Metodologia",
     "islands": "Per illa",
     "data": "Dades",
-    "press": "Premsa"
+    "press": "Premsa",
+    "about": "Qui som"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -231,5 +232,24 @@
     "cite_3": "Segons dades de l'INE (2024)...",
     "section_disclaimer_title": "Avís legal",
     "disclaimer_body": "Totes les dades provenen de fonts públiques oficials o obertes. No fem cap acusació individual. Si detectes una errada, escriu-nos i la corregirem."
+  },
+  "about": {
+    "title": "Qui som",
+    "lead": "Una iniciativa ciutadana independent. Sense afiliació política, sense finançament públic o privat. Només dades, mètode i codi obert.",
+    "section_who_title": "Qui som",
+    "section_who_p1": "Cases Tancades és un projecte personal d'anàlisi de dades sobre l'habitatge a les Illes Balears. Va néixer de la impressió que el debat públic sobre el lloguer turístic es quedava en opinions i titulars, sense xifres compartides i verificables.",
+    "section_who_p2": "L'objectiu és posar sobre la taula una lectura honesta del que sabem i del que no sabem. Creuar dades oficials existents — sense inventar-ne cap — i fer-les accessibles a la ciutadania.",
+    "section_who_p3": "El projecte no està vinculat a cap partit polític, associació professional, empresa ni administració. No rebem finançament públic ni privat. Si en algun moment es plantegés, es faria públic aquí.",
+    "section_interest_title": "Conflicte d'interès",
+    "section_interest_body": "Cap. L'autora no té propietats a Balears, ni participació en empreses turístiques, immobiliàries o de mitjans. L'objectiu és periodístic i documental, no comercial.",
+    "section_privacy_title": "Privacitat",
+    "section_privacy_body": "Aquesta web no utilitza cap eina d'analítica ni de seguiment. No hi ha Google Analytics, ni Facebook Pixel, ni cap cookie de tercers. L'única cookie que es desa és la de preferència d'idioma (ca/es) — sense ella el botó d'idioma no funciona.",
+    "section_contribute_title": "Com contribuir",
+    "section_contribute_intro": "El projecte és obert. Tothom hi pot col·laborar:",
+    "contribute_issues": " Obrir un issue a GitHub si detectes una errada a les dades",
+    "contribute_prs": " Enviar un pull request amb millores al codi o noves visualitzacions",
+    "contribute_sources": " Proposar noves fonts de dades públiques que es puguin afegir",
+    "contribute_share": " Difondre el projecte a través de xarxes o mitjans",
+    "section_methodology_link": "Per saber com hem fet el càlcul, consulta la"
   }
 }
