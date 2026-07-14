@@ -1,0 +1,117 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+
+// Files disponibles per descarregar. Sizes obtingudes amb `stat -f %z`.
+const files = [
+  { href: "/data/dataset.csv", key: "data.file_dataset_csv", descKey: "data.file_dataset_csv_desc", format: "CSV", size: "128 KB" },
+  { href: "/data/dataset.parquet", key: "data.file_dataset_parquet", descKey: "data.file_dataset_parquet_desc", format: "Parquet", size: "41 KB" },
+  { href: "/data/airbnb_listings.geojson", key: "data.file_airbnb_geojson", descKey: "data.file_airbnb_geojson_desc", format: "GeoJSON", size: "3,0 MB" },
+  { href: "/tiles/dataset.pmtiles", key: "data.file_tiles_pmtiles", descKey: "data.file_tiles_pmtiles_desc", format: "PMTiles", size: "1,5 MB" },
+  { href: "/data/dataset_web.json", key: "data.file_dataset_web_json", descKey: "data.file_dataset_web_json_desc", format: "JSON", size: "1 KB" },
+];
+
+const repoUrl = "https://github.com/itziarZG/Vivienda";
+const description = t(lang, "data.lead");
+---
+
+<Base
+  lang={lang}
+  active="data"
+  title={t(lang, "data.title")}
+  description={description}
+>
+  <section class="bg-gradient-to-b from-orange-50 to-stone-50 border-b border-stone-200">
+    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
+        {t(lang, "data.title")}
+      </h1>
+      <p class="text-base sm:text-lg text-stone-700 max-w-2xl mx-auto">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "data.section_files_title")}
+    </h2>
+    <div class="overflow-x-auto border border-stone-200 rounded-lg bg-white">
+      <table class="w-full text-sm">
+        <thead class="bg-stone-100 text-stone-700">
+          <tr>
+            <th class="text-left px-4 py-2 font-medium">{t(lang, "data.col_file")}</th>
+            <th class="text-left px-4 py-2 font-medium">{t(lang, "data.col_format")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "data.col_size")}</th>
+            <th class="text-left px-4 py-2 font-medium hidden md:table-cell">{t(lang, "data.col_content")}</th>
+            <th class="text-right px-4 py-2 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {files.map((f) => (
+            <tr class="border-t border-stone-200">
+              <td class="px-4 py-3 font-medium">
+                {t(lang, f.key)}
+                <p class="md:hidden text-xs text-stone-500 mt-1">{t(lang, f.descKey)}</p>
+              </td>
+              <td class="px-4 py-3">
+                <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">{f.format}</code>
+              </td>
+              <td class="px-4 py-3 text-right tabular-nums text-stone-700">{f.size}</td>
+              <td class="px-4 py-3 text-stone-600 text-xs hidden md:table-cell">
+                {t(lang, f.descKey)}
+              </td>
+              <td class="px-4 py-3 text-right">
+                <a
+                  href={f.href}
+                  download
+                  class="inline-block px-3 py-1.5 text-xs font-medium text-white bg-orange-700 hover:bg-orange-800 rounded"
+                >
+                  ↓ {f.format}
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
+      {t(lang, "data.section_code_title")}
+    </h2>
+    <p class="text-stone-700 mb-6">{t(lang, "data.section_code_body")}</p>
+    <ol class="space-y-3 text-sm text-stone-700 list-decimal pl-5 mb-6">
+      <li>{t(lang, "data.repro_step1")} <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">git clone {repoUrl}.git && cd Vivienda && python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt</code></li>
+      <li>{t(lang, "data.repro_step2")}</li>
+      <li><code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">python scripts/01_load_sources.py → 02 → 03 → 04 → 05 → 06</code></li>
+    </ol>
+    <a
+      href={repoUrl}
+      class="inline-flex items-center gap-2 px-5 py-2.5 border border-stone-300 text-stone-800 font-medium rounded hover:bg-stone-100"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+      </svg>
+      {t(lang, "data.repo_link_label")} →
+    </a>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
+      {t(lang, "data.section_license_title")}
+    </h2>
+    <p class="text-stone-700 leading-relaxed">
+      CC BY-SA 4.0 · <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="text-orange-700 hover:text-orange-800 underline">creativecommons.org/licenses/by-sa/4.0</a>
+    </p>
+    <p class="text-sm text-stone-600 mt-2">
+      {lang === "es"
+        ? "Puedes reutilizar, adaptar y difundir los datos con atribución y la misma licencia."
+        : "Pots reutilitzar, adaptar i difondre les dades amb atribució i la mateixa llicència."}
+    </p>
+  </section>
+</Base>

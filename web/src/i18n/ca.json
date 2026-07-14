@@ -9,7 +9,8 @@
     "home": "Inici",
     "map": "Mapa",
     "methodology": "Metodologia",
-    "islands": "Per illa"
+    "islands": "Per illa",
+    "data": "Dades"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -176,5 +177,31 @@
       "stat_eurom2_label": "€/m² compraventa",
       "narrative": "1.375 establiments, 14.935 places. Una illa sencera amb més places turístiques que residents. IBESTAT només publica dades agregades a nivell d'illa — la pressió concreta dins de cada nucli (Sant Francesc, Es Pujols, La Savina) no es pot desglossar amb les dades públiques disponibles."
     }
+  },
+  "data": {
+    "title": "Dades",
+    "lead": "Tots els datasets publicats sota llicència oberta. Descarrega'ls, analitza'ls, difon-los.",
+    "section_files_title": "Fitxers",
+    "section_code_title": "Codi font",
+    "section_code_body": "El pipeline complet (Python) és al repositori del projecte. Per reproduir les dades des de zero:",
+    "section_license_title": "Llicència",
+    "col_file": "Fitxer",
+    "col_format": "Format",
+    "col_size": "Mida",
+    "col_content": "Contingut",
+    "file_dataset_csv": "Dataset processat",
+    "file_dataset_csv_desc": "674 files × 33 columnes. S'obra amb Excel, LibreOffice, Google Sheets, pandas o R.",
+    "file_dataset_parquet": "Dataset processat (natiu)",
+    "file_dataset_parquet_desc": "Mateix dataset en format columnar. Tipus preservats. Per a pipelines Python.",
+    "file_airbnb_geojson": "Punts Airbnb (Mallorca + Menorca)",
+    "file_airbnb_geojson_desc": "18.391 listings georreferenciats. Per a mapes personalitzats.",
+    "file_tiles_pmtiles": "Vector tiles",
+    "file_tiles_pmtiles_desc": "Capes vectorials z0–z13. Càrrega directa a MapLibre o similar.",
+    "file_dataset_web_json": "Resum per illa",
+    "file_dataset_web_json_desc": "Suma agregada per illa. JSON petit, ideal per a previsualitzacions.",
+    "repro_step1": "Clona el repo i activa l'entorn:",
+    "repro_step2": "Descarrega les dades crues (Inside Airbnb, INE, HUT, IBESTAT) a data/raw/",
+    "repro_step3": "Executa els scripts en ordre 01 → 06",
+    "repo_link_label": "Repositori a GitHub"
   }
 }
