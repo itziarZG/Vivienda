@@ -30,7 +30,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
   data-lang={lang}
   data-popup-title-tmpl={popupTitleTmpl}
 >
-  <div id="map" class="absolute inset-0"></div>
+  <div id="map" style="position: absolute; inset: 0;"></div>
 
   <div
     id="map-loading"
@@ -167,12 +167,12 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       sources: {
         cases: {
           type: "vector",
-          url: "pmtiles:///tiles/dataset.pmtiles",
+          url: `pmtiles://${window.location.origin}/tiles/dataset.pmtiles`,
           attribution: "INE + Inside Airbnb + Govern d'Eivissa + IBESTAT",
         },
         airbnb: {
           type: "geojson",
-          data: "/data/airbnb_listings.geojson",
+          data: `${window.location.origin}/data/airbnb_listings.geojson`,
           cluster: true,
           clusterMaxZoom: 12,
           clusterRadius: 40,
@@ -277,19 +277,39 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       ],
     },
     center: [2.85, 39.6],
-    zoom: 8,
-    minZoom: 7,
+    zoom: 9.5,
+    minZoom: 6,
     maxZoom: 14,
   });
 
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
 
-  map.on("load", () => {
+  // En Astro 7 los <script> se cargan como modulo defer, asi que el
+  // evento "load" del map puede dispararse ANTES de que registremos
+  // el handler. Patron seguro: chequear isStyleLoaded() y si ya paso,
+  // ejecutar el callback inmediatamente.
+  let readyDone = false;
+  const onReady = (cb: () => void) => {
+    if (readyDone) return;
+    readyDone = true;
+    cb();
+  };
+  if (map.isStyleLoaded()) {
+    onReady(hideLoading);
+  } else {
+    map.once("load", () => onReady(hideLoading));
+  }
+  // Safety: si el source pmtiles rompe, isStyleLoaded nunca sera true.
+  setTimeout(() => onReady(hideLoading), 3000);
+
+  function hideLoading() {
     const loading = document.getElementById("map-loading");
     if (loading) loading.style.display = "none";
+  }
 
-  const applyFilter = (isla: string) => {
+  map.on("load", () => {
+    const applyFilter = (isla: string) => {
     const filterExpr =
       isla === "all"
         ? null
