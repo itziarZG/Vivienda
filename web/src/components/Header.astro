@@ -4,7 +4,7 @@ import LanguageToggle from "./LanguageToggle.astro";
 
 interface Props {
   lang?: Lang;
-  active: "home" | "map" | "methodology";
+  active: "home" | "map" | "methodology" | "islands";
 }
 
 const { lang: langProp, active } = Astro.props;
@@ -13,8 +13,9 @@ const path = Astro.url.pathname;
 const isHome = path === "/" || path === "";
 const isMap = path.startsWith("/mapa");
 const isMetod = path.startsWith("/metodologia");
+const isIslands = path.startsWith("/illes");
 
-const navLink = (key: "home" | "map" | "methodology") =>
+const navLink = (key: "home" | "map" | "methodology" | "islands") =>
   `text-sm font-medium px-3 py-1.5 rounded transition-colors ${
     active === key
       ? "text-orange-700 bg-orange-50"
@@ -46,6 +47,13 @@ const navLink = (key: "home" | "map" | "methodology") =>
         aria-current={isMap ? "page" : undefined}
       >
         {t(lang, "nav.map")}
+      </a>
+      <a
+        href="/illes"
+        class={navLink("islands")}
+        aria-current={isIslands ? "page" : undefined}
+      >
+        {t(lang, "nav.islands")}
       </a>
       <a
         href="/metodologia"

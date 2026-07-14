@@ -1,0 +1,214 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import { getDataset } from "../data/dataset";
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+const dataset = getDataset();
+
+interface CardStat {
+  value: string;
+  labelKey: string;
+  sourceKey?: "source_airbnb" | "source_hut" | "source_ibestat";
+}
+
+interface IslandCard {
+  key: "mallorca" | "menorca" | "eivissa" | "formentera";
+  sectionCount: number;
+  dataSourceKey: "source_airbnb" | "source_hut" | "source_ibestat";
+  stats: CardStat[];
+}
+
+const mallorcaRow = dataset.resumen_por_isla.find((r) => r.isla === "Mallorca")!;
+const menorcaRow = dataset.resumen_por_isla.find((r) => r.isla === "Menorca")!;
+const eivissaRow = dataset.resumen_por_isla.find((r) => r.isla === "Eivissa")!;
+const formenteraRow = dataset.resumen_por_isla.find((r) => r.isla === "Formentera")!;
+
+const EUROM2 = {
+  mallorca: 3500,
+  menorca: 2748,
+  eivissa: 4331,
+  formentera: 7353,
+} as const;
+
+const fmt = new Intl.NumberFormat(lang === "ca" ? "ca-ES" : "es-ES");
+const fmtEur = (n: number) => `${fmt.format(n)} €`;
+
+const cards: IslandCard[] = [
+  {
+    key: "mallorca",
+    sectionCount: mallorcaRow.secciones,
+    dataSourceKey: "source_airbnb",
+    stats: [
+      { value: fmt.format(mallorcaRow.airbnb_listings), labelKey: "islands.mallorca.stat_listings_label" },
+      { value: fmt.format(mallorcaRow.airbnb_entire_homes), labelKey: "islands.mallorca.stat_entire_label" },
+      { value: fmt.format(mallorcaRow.airbnb_hosts_unicos), labelKey: "islands.mallorca.stat_hosts_label" },
+      { value: fmtEur(EUROM2.mallorca), labelKey: "islands.mallorca.stat_eurom2_label" },
+    ],
+  },
+  {
+    key: "menorca",
+    sectionCount: menorcaRow.secciones,
+    dataSourceKey: "source_airbnb",
+    stats: [
+      { value: fmt.format(menorcaRow.airbnb_listings), labelKey: "islands.menorca.stat_listings_label" },
+      { value: fmt.format(menorcaRow.airbnb_entire_homes), labelKey: "islands.menorca.stat_entire_label" },
+      { value: fmt.format(menorcaRow.airbnb_hosts_unicos), labelKey: "islands.menorca.stat_hosts_label" },
+      { value: fmtEur(EUROM2.menorca), labelKey: "islands.menorca.stat_eurom2_label" },
+    ],
+  },
+  {
+    key: "eivissa",
+    sectionCount: eivissaRow.secciones,
+    dataSourceKey: "source_hut",
+    stats: [
+      { value: fmt.format(eivissaRow.hut_registros), labelKey: "islands.eivissa.stat_hut_label" },
+      { value: fmt.format(eivissaRow.hut_plazas), labelKey: "islands.eivissa.stat_hut_places_label" },
+      { value: `40% (7.296)`, labelKey: "islands.eivissa.stat_sant_josep_label" },
+      { value: fmtEur(EUROM2.eivissa), labelKey: "islands.eivissa.stat_eurom2_label" },
+    ],
+  },
+  {
+    key: "formentera",
+    sectionCount: formenteraRow.secciones,
+    dataSourceKey: "source_ibestat",
+    stats: [
+      { value: fmt.format(formenteraRow.hut_registros), labelKey: "islands.formentera.stat_estab_label" },
+      { value: fmt.format(formenteraRow.hut_plazas), labelKey: "islands.formentera.stat_places_label" },
+      { value: "1,24", labelKey: "islands.formentera.stat_ratio_label" },
+      { value: fmtEur(EUROM2.formentera), labelKey: "islands.formentera.stat_eurom2_label" },
+    ],
+  },
+];
+
+const description = t(lang, "islands.lead");
+---
+
+<Base
+  lang={lang}
+  active="islands"
+  title={t(lang, "islands.title")}
+  description={description}
+>
+  <section class="bg-gradient-to-b from-orange-50 to-stone-50 border-b border-stone-200">
+    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16 text-center">
+      <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
+        {t(lang, "islands.title")}
+      </h1>
+      <p class="text-base sm:text-lg text-stone-700 max-w-2xl mx-auto">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {cards.map((card) => (
+        <article class="border border-stone-200 rounded-lg p-6 bg-white flex flex-col">
+          <header class="mb-4">
+            <h2 class="text-2xl font-bold text-orange-700">
+              {t(lang, `islands.${card.key}.title`)}
+            </h2>
+            <p class="text-sm text-stone-500 mt-1">
+              {t(lang, `islands.${card.key}.intro`)}
+            </p>
+          </header>
+          <dl class="grid grid-cols-2 gap-4 mb-4">
+            {card.stats.map((s) => (
+              <div>
+                <dt class="text-xs uppercase tracking-wide text-stone-500">
+                  {t(lang, s.labelKey)}
+                </dt>
+                <dd class="text-2xl font-bold text-stone-900 tabular-nums">
+                  {s.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p class="text-sm text-stone-700 leading-relaxed mb-4 flex-1">
+            {t(lang, `islands.${card.key}.narrative`)}
+          </p>
+          <footer class="flex items-center justify-between text-xs text-stone-500">
+            <span>
+              {fmt.format(card.sectionCount)} {t(lang, "home.col_sections").toLowerCase()} · {t(lang, `islands.${card.dataSourceKey}`)}
+            </span>
+            <a
+              href="/mapa"
+              class="text-sm font-medium text-orange-700 hover:text-orange-800"
+            >
+              {t(lang, "islands.cta_map")} →
+            </a>
+          </footer>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "islands.section_compare_title")}
+    </h2>
+    <div class="overflow-x-auto border border-stone-200 rounded-lg bg-white">
+      <table class="w-full text-sm">
+        <thead class="bg-stone-100 text-stone-700">
+          <tr>
+            <th class="text-left px-4 py-2 font-medium">{t(lang, "islands.col_island")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_sections")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_listings")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_entire")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_hut")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_hut_places")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "islands.col_euro_m2")}</th>
+            <th class="text-left px-4 py-2 font-medium">{t(lang, "islands.col_source")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-stone-200">
+            <td class="px-4 py-2 font-medium">{t(lang, "islands.mallorca.title")}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(mallorcaRow.secciones)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(mallorcaRow.airbnb_listings)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(mallorcaRow.airbnb_entire_homes)}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmtEur(EUROM2.mallorca)}</td>
+            <td class="px-4 py-2 text-stone-500 text-xs">{t(lang, "islands.source_airbnb")}</td>
+          </tr>
+          <tr class="border-t border-stone-200">
+            <td class="px-4 py-2 font-medium">{t(lang, "islands.menorca.title")}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(menorcaRow.secciones)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(menorcaRow.airbnb_listings)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(menorcaRow.airbnb_entire_homes)}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmtEur(EUROM2.menorca)}</td>
+            <td class="px-4 py-2 text-stone-500 text-xs">{t(lang, "islands.source_airbnb")}</td>
+          </tr>
+          <tr class="border-t border-stone-200">
+            <td class="px-4 py-2 font-medium">{t(lang, "islands.eivissa.title")}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(eivissaRow.secciones)}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(eivissaRow.hut_registros)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(eivissaRow.hut_plazas)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmtEur(EUROM2.eivissa)}</td>
+            <td class="px-4 py-2 text-stone-500 text-xs">{t(lang, "islands.source_hut")}</td>
+          </tr>
+          <tr class="border-t border-stone-200">
+            <td class="px-4 py-2 font-medium">{t(lang, "islands.formentera.title")}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(formenteraRow.secciones)}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-400">—</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(formenteraRow.hut_registros)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmt.format(formenteraRow.hut_plazas)}</td>
+            <td class="px-4 py-2 text-right tabular-nums">{fmtEur(EUROM2.formentera)}</td>
+            <td class="px-4 py-2 text-stone-500 text-xs">{t(lang, "islands.source_ibestat")}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-xs text-stone-500 mt-3">
+      €/m²: dades de compraventa 2024 (Conferència OHIB, 12-13 nov 2025).
+    </p>
+  </section>
+</Base>

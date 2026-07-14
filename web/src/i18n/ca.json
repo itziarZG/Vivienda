@@ -8,7 +8,8 @@
   "nav": {
     "home": "Inici",
     "map": "Mapa",
-    "methodology": "Metodologia"
+    "methodology": "Metodologia",
+    "islands": "Per illa"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -122,5 +123,58 @@
     "of_total": "del total",
     "people": "persones",
     "back_to_home": "Tornar a l'inici"
+  },
+  "islands": {
+    "title": "Per illa",
+    "lead": "Cada illa té una realitat distinta. Aquí les posem en paral·lel amb les mateixes dades, les mateixes fonts i les mateixes limitacions.",
+    "section_compare_title": "Comparativa ràpida",
+    "col_island": "Illa",
+    "col_sections": "Seccions",
+    "col_listings": "Listings Airbnb",
+    "col_entire": "Pisos sencers",
+    "col_hut": "Registres HUT",
+    "col_hut_places": "Places HUT",
+    "col_euro_m2": "€/m² (2024)",
+    "col_source": "Font",
+    "source_airbnb": "Airbnb (2026-06)",
+    "source_hut": "HUT (2026-07)",
+    "source_ibestat": "IBESTAT (2019)",
+    "cta_map": "Veure al mapa",
+    "mallorca": {
+      "title": "Mallorca",
+      "intro": "L'illa grossa. La capital, Palma, concentra gairebé tota la pressió.",
+      "stat_listings_label": "Listings Airbnb",
+      "stat_entire_label": "Pisos sencers",
+      "stat_hosts_label": "Hosts únics",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "14.644 pisos oferts a Airbnb, 13.925 dels quals són pisos sencers. Un de cada quatre pisos sencers que es lloguen a Mallorca estan a Airbnb. 8.458 hosts concentren l'oferta — la meitat són multi-propietaris. La pressió s'estén a municipis costaners com Calvià, Alcúdia, Pollença i Manacor."
+    },
+    "menorca": {
+      "title": "Menorca",
+      "intro": "Reserva de Biosfera, però el lloguer temporal s'ha menjat el pati.",
+      "stat_listings_label": "Listings Airbnb",
+      "stat_entire_label": "Pisos sencers",
+      "stat_hosts_label": "Hosts únics",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "3.531 listings actius, 3.407 dels quals són pisos sencers (96%). La pressió és forta a Ciutadella i Maó, però el pati — l'habitatge permanent — s'ha omplert de lloguer temporal. La Reserva de Biosfera no ha blindat el mercat residencial."
+    },
+    "eivissa": {
+      "title": "Eivissa",
+      "intro": "La que té més places legals per habitant. I la bretxa més gran entre legal i real.",
+      "stat_hut_label": "Registres HUT",
+      "stat_hut_places_label": "Places HUT",
+      "stat_sant_josep_label": "A Sant Josep",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "El Govern reconeix 2.364 registres HUT amb 18.184 places a l'illa. Però el 40% es concentren a Sant Josep de sa Talaia — un municipi rural de 28.000 habitants. A Eivissa capital (50.000 habitants) només 41 registres amb 236 places. On són les 7.000 places que s'ofereixen a Airbnb a Eivissa si el registre legal només en compta 236 al casc urbà?"
+    },
+    "formentera": {
+      "title": "Formentera",
+      "intro": "12.000 residents. Més places turístiques que habitants.",
+      "stat_estab_label": "Establiments",
+      "stat_places_label": "Places",
+      "stat_ratio_label": "Places / residents",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "1.375 establiments, 14.935 places. Una illa sencera amb més places turístiques que residents. IBESTAT només publica dades agregades a nivell d'illa — la pressió concreta dins de cada nucli (Sant Francesc, Es Pujols, La Savina) no es pot desglossar amb les dades públiques disponibles."
+    }
   }
 }

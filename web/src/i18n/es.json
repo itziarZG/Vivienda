@@ -8,7 +8,8 @@
   "nav": {
     "home": "Inicio",
     "map": "Mapa",
-    "methodology": "Metodología"
+    "methodology": "Metodología",
+    "islands": "Por isla"
   },
   "lang_toggle": {
     "label": "Idioma",
@@ -122,5 +123,58 @@
     "of_total": "del total",
     "people": "persones",
     "back_to_home": "Volver al inicio"
+  },
+  "islands": {
+    "title": "Por isla",
+    "lead": "Cada isla tiene una realidad distinta. Aquí las ponemos en paralelo con los mismos datos, las mismas fuentes y las mismas limitaciones.",
+    "section_compare_title": "Comparativa rápida",
+    "col_island": "Isla",
+    "col_sections": "Secciones",
+    "col_listings": "Listings Airbnb",
+    "col_entire": "Pisos enteros",
+    "col_hut": "Registros HUT",
+    "col_hut_places": "Plazas HUT",
+    "col_euro_m2": "€/m² (2024)",
+    "col_source": "Fuente",
+    "source_airbnb": "Airbnb (2026-06)",
+    "source_hut": "HUT (2026-07)",
+    "source_ibestat": "IBESTAT (2019)",
+    "cta_map": "Ver en el mapa",
+    "mallorca": {
+      "title": "Mallorca",
+      "intro": "La isla grande. La capital, Palma, concentra casi toda la presión.",
+      "stat_listings_label": "Listings Airbnb",
+      "stat_entire_label": "Pisos enteros",
+      "stat_hosts_label": "Hosts únicos",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "14.644 pisos ofertados en Airbnb, 13.925 de los cuales son pisos enteros. Uno de cada cuatro pisos enteros que se alquilan en Mallorca están en Airbnb. 8.458 hosts concentran la oferta — la mitad son multi-propietarios. La presión se extiende a municipios costeros como Calvià, Alcúdia, Pollença y Manacor."
+    },
+    "menorca": {
+      "title": "Menorca",
+      "intro": "Reserva de la Biosfera, pero el alquiler temporal se ha comido el patio.",
+      "stat_listings_label": "Listings Airbnb",
+      "stat_entire_label": "Pisos enteros",
+      "stat_hosts_label": "Hosts únicos",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "3.531 listings activos, 3.407 de los cuales son pisos enteros (96%). La presión es fuerte en Ciutadella y Maó, pero el patio — la vivienda permanente — se ha llenado de alquiler temporal. La Reserva de la Biosfera no ha blindado el mercado residencial."
+    },
+    "eivissa": {
+      "title": "Ibiza",
+      "intro": "La que tiene más plazas legales por habitante. Y la brecha más grande entre lo legal y lo real.",
+      "stat_hut_label": "Registros HUT",
+      "stat_hut_places_label": "Plazas HUT",
+      "stat_sant_josep_label": "En Sant Josep",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "El Govern reconoce 2.364 registros HUT con 18.184 plazas en la isla. Pero el 40% se concentran en Sant Josep de sa Talaia — un municipio rural de 28.000 habitantes. En Ibiza capital (50.000 habitantes) solo 41 registros con 236 plazas. ¿Dónde están las 7.000 plazas que se ofertan en Airbnb en Ibiza si el registro legal solo cuenta 236 en el casco urbano?"
+    },
+    "formentera": {
+      "title": "Formentera",
+      "intro": "12.000 residentes. Más plazas turísticas que habitantes.",
+      "stat_estab_label": "Establecimientos",
+      "stat_places_label": "Plazas",
+      "stat_ratio_label": "Plazas / residentes",
+      "stat_eurom2_label": "€/m² compraventa",
+      "narrative": "1.375 establecimientos, 14.935 plazas. Una isla entera con más plazas turísticas que residentes. IBESTAT solo publica datos agregados a nivel de isla — la presión concreta dentro de cada núcleo (Sant Francesc, Es Pujols, La Savina) no se puede desglosar con los datos públicos disponibles."
+    }
   }
 }
