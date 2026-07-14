@@ -45,9 +45,9 @@ Web publica que cruza dos datos oficiales - INE (consumo electrico por seccion c
 - [x] Capturas de conferencia OHIB (12-13 nov 2025) revisadas
 - [x] Plan inicial creado y validado con el usuario
 - [x] `PLAN.md` escrito
-- [x] `FASE-0-setup.md` escrito (pendiente ejecucion)
-- [x] Fase 0 ejecutada (estructura, entornos, shapefile, listings Mallorca+Menorca)
-- [x] Limitacion detectada: Eivissa y Formentera no tienen datos en Inside Airbnb
+- [x] `FASE-0-setup.md` escrito (cerrado)
+- [x] Fase 0 ejecutada: entorno, shapefile, listings Mallorca+Menorca, HUT Eivissa, IBESTAT Formentera
+- [x] Insight clave: legal != realidad. Mallorca/Menorca capturan Airbnb (real), Eivissa/Formentera solo legal. La diferencia ES la denuncia.
 - [ ] Fase 1 ejecutada
 - [ ] Fase 2 ejecutada
 - [ ] Fase 3 ejecutada

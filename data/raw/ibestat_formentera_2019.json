@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "sector": "208 Turisme",
+    "num_actividad": "34 208 023",
+    "denominacion": "Establiments turístics de Formentera",
+    "tabla": "1. Allotjaments turístics per grup, modalitat i categoria",
+    "unidad": "Tipologia d'establiment, núm. d'unitats d'allotjament",
+    "periodo": 2019,
+    "ultima_actualizacion": "2019-12-01",
+    "fuente": "Consell Insular de Formentera. Àrea de Promoció",
+    "total_unidades": 1375,
+    "total_plazas": 14935
+  },
+  "data": [
+    {
+      "tipologia": "APARTAMENTS 1 CLAU",
+      "unidades": 56,
+      "plazas": 1758
+    },
+    {
+      "tipologia": "APARTAMENTS 2 CLAUS",
+      "unidades": 10,
+      "plazas": 641
+    },
+    {
+      "tipologia": "APARTAMENTS 3 CLAUS",
+      "unidades": 5,
+      "plazas": 201
+    },
+    {
+      "tipologia": "APARTAMENTS 4 CLAUS",
+      "unidades": 2,
+      "plazas": 158
+    },
+    {
+      "tipologia": "AGROTURISME",
+      "unidades": 1,
+      "plazas": 12
+    },
+    {
+      "tipologia": "CASA D'HOSTES",
+      "unidades": 8,
+      "plazas": 125
+    },
+    {
+      "tipologia": "CIUTAT DE VACANCES",
+      "unidades": 2,
+      "plazas": 1193
+    },
+    {
+      "tipologia": "FONDA",
+      "unidades": 1,
+      "plazas": 30
+    },
+    {
+      "tipologia": "HOSTAL 1 *",
+      "unidades": 10,
+      "plazas": 508
+    },
+    {
+      "tipologia": "HOSTAL 2*",
+      "unidades": 5,
+      "plazas": 292
+    },
+    {
+      "tipologia": "HOSTAL 3*",
+      "unidades": 2,
+      "plazas": 170
+    },
+    {
+      "tipologia": "HOTEL 1*",
+      "unidades": 3,
+      "plazas": 304
+    },
+    {
+      "tipologia": "HOTEL 2*",
+      "unidades": 5,
+      "plazas": 347
+    },
+    {
+      "tipologia": "HOTEL 3*",
+      "unidades": 4,
+      "plazas": 380
+    },
+    {
+      "tipologia": "HOTEL 4*",
+      "unidades": 6,
+      "plazas": 1819
+    },
+    {
+      "tipologia": "HOTEL 5*",
+      "unidades": 1,
+      "plazas": 158
+    },
+    {
+      "tipologia": "HABITATGES TURÍSTICS DE VACANCES",
+      "unidades": 168,
+      "plazas": 1927
+    },
+    {
+      "tipologia": "ESTADES TURÍSTIQUES",
+      "unidades": 1086,
+      "plazas": 4912
+    }
+  ]
+}
