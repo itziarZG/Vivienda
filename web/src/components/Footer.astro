@@ -1,0 +1,20 @@
+---
+import { t, type Lang } from "../i18n";
+interface Props {
+  lang?: Lang;
+}
+const { lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? "ca";
+---
+
+<footer class="border-t border-stone-200 bg-stone-50 mt-16">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <p class="text-xs text-stone-600">{t(lang, "site.footer_note")}</p>
+    <p class="text-xs text-stone-500">
+      <a href="/metodologia" class="hover:text-orange-700 underline underline-offset-2">
+        {t(lang, "nav.methodology")}
+      </a>
+      · CC BY-SA 4.0
+    </p>
+  </div>
+</footer>

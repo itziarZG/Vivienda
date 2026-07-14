@@ -1,0 +1,411 @@
+---
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+
+const filterOptions = [
+  { value: "all", label: t(lang, "map.isla_all") },
+  { value: "Mallorca", label: "Mallorca" },
+  { value: "Menorca", label: "Menorca" },
+  { value: "Eivissa", label: "Eivissa" },
+  { value: "Formentera", label: "Formentera" },
+];
+
+const popupTitleTmpl = t(lang, "map.popup_title");
+---
+
+<section class="border-b border-stone-200 bg-white">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "map.title")}
+    </h1>
+    <p class="text-stone-600">{t(lang, "map.lead")}</p>
+  </div>
+</section>
+
+<div
+  id="map-shell"
+  class="relative w-full"
+  style="height: calc(100vh - 60px); min-height: 480px;"
+  data-lang={lang}
+  data-popup-title-tmpl={popupTitleTmpl}
+>
+  <div id="map" class="absolute inset-0"></div>
+
+  <div
+    id="map-loading"
+    class="absolute inset-0 flex items-center justify-center bg-stone-100 text-stone-600 z-30"
+  >
+    {t(lang, "map.loading")}
+  </div>
+
+  <div
+    class="absolute top-3 left-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 max-w-xs"
+  >
+    <div class="mb-2">
+      <label for="isla-filter" class="block text-xs font-medium text-stone-700 mb-1">
+        {t(lang, "map.isla_filter_label")}
+      </label>
+      <select
+        id="isla-filter"
+        class="w-full text-sm border border-stone-300 rounded px-2 py-1 bg-white"
+      >
+        {filterOptions.map((o) => (
+          <option value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </div>
+    <div class="border-t border-stone-200 pt-2">
+      <p class="text-xs font-medium text-stone-700 mb-1">
+        {t(lang, "map.layer_label")}
+      </p>
+      <label class="flex items-center gap-2 text-xs py-0.5 cursor-pointer">
+        <input type="checkbox" id="toggle-choropleth" checked />
+        <span>{t(lang, "map.layer_choropleth")}</span>
+      </label>
+      <label class="flex items-center gap-2 text-xs py-0.5 cursor-pointer">
+        <input type="checkbox" id="toggle-clusters" checked />
+        <span>{t(lang, "map.layer_clusters")}</span>
+      </label>
+    </div>
+  </div>
+
+  <div
+    class="absolute bottom-3 right-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 max-w-xs text-xs"
+  >
+    <p class="font-medium text-stone-800 mb-2">
+      {t(lang, "map.legend_title")}
+    </p>
+    <div class="mb-2">
+      <p class="font-semibold text-stone-700">
+        {t(lang, "map.legend_airbnb_title")}
+      </p>
+      <p class="text-stone-500 mb-1">
+        {t(lang, "map.legend_airbnb_desc")}
+      </p>
+      <div class="flex items-center gap-0.5 h-2 rounded overflow-hidden">
+        <span class="flex-1" style="background:#fef3c7"></span>
+        <span class="flex-1" style="background:#fde68a"></span>
+        <span class="flex-1" style="background:#fbbf24"></span>
+        <span class="flex-1" style="background:#f97316"></span>
+        <span class="flex-1" style="background:#c2410c"></span>
+        <span class="flex-1" style="background:#7c2d12"></span>
+      </div>
+      <div class="flex justify-between text-[10px] text-stone-500 mt-0.5">
+        <span>0</span>
+        <span>100+</span>
+      </div>
+    </div>
+    <div>
+      <p class="font-semibold text-stone-700">
+        {t(lang, "map.legend_hut_title")}
+      </p>
+      <p class="text-stone-500 mb-1">
+        {t(lang, "map.legend_hut_desc")}
+      </p>
+      <div class="flex items-center gap-0.5 h-2 rounded overflow-hidden">
+        <span class="flex-1" style="background:#e0f2fe"></span>
+        <span class="flex-1" style="background:#7dd3fc"></span>
+        <span class="flex-1" style="background:#0ea5e9"></span>
+        <span class="flex-1" style="background:#0369a1"></span>
+        <span class="flex-1" style="background:#0c4a6e"></span>
+      </div>
+      <div class="flex justify-between text-[10px] text-stone-500 mt-0.5">
+        <span>0</span>
+        <span>7K+</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import maplibregl, { Popup } from "maplibre-gl";
+  import { Protocol } from "pmtiles";
+  import "maplibre-gl/dist/maplibre-gl.css";
+
+  const protocol = new Protocol();
+  maplibregl.addProtocol("pmtiles", protocol.tile);
+
+  const shell = document.getElementById("map-shell") as HTMLElement;
+  const lang = (shell.dataset.lang as "ca" | "es") ?? "ca";
+  const popupTitleTmpl = shell.dataset.popupTitleTmpl ?? "Secció {cusec}";
+
+  const t_ca: Record<string, string> = {
+    municipi: "Municipi",
+    isla: "Illa",
+    listings: "Listings Airbnb",
+    hut_registros: "Registres HUT",
+    hut_plazas: "Places HUT",
+    granularitat: "Granularitat",
+    sense_dades: "Sense dades",
+    seccion_censal: "secció censal",
+    municipio: "municipi",
+    illa: "illa",
+    list: "Llista",
+  };
+  const t_es: Record<string, string> = {
+    municipi: "Municipio",
+    isla: "Isla",
+    listings: "Listings Airbnb",
+    hut_registros: "Registros HUT",
+    hut_plazas: "Plazas HUT",
+    granularitat: "Granularidad",
+    sense_dades: "Sin datos",
+    seccion_censal: "sección censal",
+    municipio: "municipio",
+    illa: "isla",
+    list: "Lista",
+  };
+  const T = lang === "es" ? t_es : t_ca;
+  const fmt = (n: number) =>
+    new Intl.NumberFormat(lang === "ca" ? "ca-ES" : "es-ES").format(n);
+
+  const map = new maplibregl.Map({
+    container: "map",
+    style: {
+      version: 8,
+      sources: {
+        cases: {
+          type: "vector",
+          url: "pmtiles:///tiles/dataset.pmtiles",
+          attribution: "INE + Inside Airbnb + Govern d'Eivissa + IBESTAT",
+        },
+        airbnb: {
+          type: "geojson",
+          data: "/data/airbnb_listings.geojson",
+          cluster: true,
+          clusterMaxZoom: 12,
+          clusterRadius: 40,
+        },
+      },
+      layers: [
+        {
+          id: "background",
+          type: "background",
+          paint: { "background-color": "#f5f5f4" },
+        },
+        {
+          id: "secciones-line",
+          type: "line",
+          source: "cases",
+          "source-layer": "cases",
+          paint: {
+            "line-color": "#a8a29e",
+            "line-width": [
+              "interpolate", ["linear"], ["zoom"],
+              6, 0.1, 10, 0.3, 13, 0.6,
+            ],
+          },
+        },
+        {
+          id: "secciones-airbnb-fill",
+          type: "fill",
+          source: "cases",
+          "source-layer": "cases",
+          filter: ["match", ["get", "isla"], ["Mallorca", "Menorca"], true, false],
+          paint: {
+            "fill-color": [
+              "step",
+              ["coalesce", ["get", "airbnb_listings"], 0],
+              "#fef3c7", 1, "#fde68a", 10, "#fbbf24",
+              50, "#f97316", 150, "#c2410c", 400, "#7c2d12",
+            ],
+            "fill-opacity": 0.7,
+          },
+        },
+        {
+          id: "secciones-hut-fill",
+          type: "fill",
+          source: "cases",
+          "source-layer": "cases",
+          filter: ["match", ["get", "isla"], ["Eivissa", "Formentera"], true, false],
+          paint: {
+            "fill-color": [
+              "step",
+              ["coalesce", ["get", "hut_plazas"], 0],
+              "#e0f2fe", 1, "#7dd3fc", 1000, "#0ea5e9",
+              3000, "#0369a1", 7000, "#0c4a6e",
+            ],
+            "fill-opacity": 0.7,
+          },
+        },
+        {
+          id: "airbnb-clusters",
+          type: "circle",
+          source: "airbnb",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": [
+              "step", ["get", "point_count"],
+              "#fde68a", 10, "#fbbf24", 50, "#f97316",
+              200, "#c2410c", 1000, "#7c2d12",
+            ],
+            "circle-radius": [
+              "step", ["get", "point_count"],
+              14, 10, 18, 50, 22, 200, 28, 1000, 34,
+            ],
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 1.5,
+            "circle-opacity": 0.85,
+          },
+        },
+        {
+          id: "airbnb-cluster-count",
+          type: "symbol",
+          source: "airbnb",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-size": 12,
+            "text-font": ["Open Sans Regular"],
+          },
+          paint: { "text-color": "#1c1917" },
+        },
+        {
+          id: "airbnb-unclustered",
+          type: "circle",
+          source: "airbnb",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "#dc2626",
+            "circle-radius": 3,
+            "circle-opacity": 0.7,
+            "circle-stroke-color": "#fff",
+            "circle-stroke-width": 0.5,
+          },
+        },
+      ],
+    },
+    center: [2.85, 39.6],
+    zoom: 8,
+    minZoom: 7,
+    maxZoom: 14,
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+  map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
+
+  map.on("load", () => {
+    const loading = document.getElementById("map-loading");
+    if (loading) loading.style.display = "none";
+
+  const applyFilter = (isla: string) => {
+    const filterExpr =
+      isla === "all"
+        ? null
+        : (["==", ["get", "isla"], isla] as unknown as maplibregl.FilterSpecification);
+    ["secciones-airbnb-fill", "secciones-hut-fill", "secciones-line"].forEach(
+      (id) => {
+        if (map.getLayer(id)) {
+          map.setFilter(id, filterExpr);
+        }
+      },
+    );
+    if (isla === "all") {
+      map.setFilter("airbnb-clusters", null);
+      map.setFilter("airbnb-cluster-count", null);
+      map.setFilter("airbnb-unclustered", null);
+    } else if (isla === "Mallorca" || isla === "Menorca") {
+      const f: maplibregl.FilterSpecification = ["==", ["get", "isla"], isla];
+      map.setFilter("airbnb-clusters", ["all", ["has", "point_count"], f]);
+      map.setFilter("airbnb-cluster-count", ["all", ["has", "point_count"], f]);
+      map.setFilter("airbnb-unclustered", ["all", ["!", ["has", "point_count"]], f]);
+    } else {
+      map.setFilter("airbnb-clusters", ["==", ["literal", "__none__"], "__none__"]);
+      map.setFilter("airbnb-cluster-count", ["==", ["literal", "__none__"], "__none__"]);
+      map.setFilter("airbnb-unclustered", ["==", ["literal", "__none__"], "__none__"]);
+    }
+  };
+
+    const select = document.getElementById("isla-filter") as HTMLSelectElement;
+    select?.addEventListener("change", () => applyFilter(select.value));
+    if (select) applyFilter(select.value);
+
+    const toggleChoro = document.getElementById("toggle-choropleth") as HTMLInputElement;
+    const toggleClu = document.getElementById("toggle-clusters") as HTMLInputElement;
+    toggleChoro?.addEventListener("change", () => {
+      const v = toggleChoro.checked ? "visible" : "none";
+      ["secciones-airbnb-fill", "secciones-hut-fill", "secciones-line"].forEach(
+        (id) => {
+          if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", v);
+        },
+      );
+    });
+    toggleClu?.addEventListener("change", () => {
+      const v = toggleClu.checked ? "visible" : "none";
+      ["airbnb-clusters", "airbnb-cluster-count", "airbnb-unclustered"].forEach(
+        (id) => {
+          if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", v);
+        },
+      );
+    });
+
+    map.on("click", "secciones-airbnb-fill", (e) => openPopup(e, "airbnb"));
+    map.on("click", "secciones-hut-fill", (e) => openPopup(e, "hut"));
+    map.on("mouseenter", "secciones-airbnb-fill", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "secciones-airbnb-fill", () => {
+      map.getCanvas().style.cursor = "";
+    });
+    map.on("mouseenter", "secciones-hut-fill", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "secciones-hut-fill", () => {
+      map.getCanvas().style.cursor = "";
+    });
+    map.on("click", "airbnb-clusters", async (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ["airbnb-clusters"] });
+      const clusterId = features[0]?.properties?.cluster_id;
+      if (clusterId == null) return;
+      const src = map.getSource("airbnb") as maplibregl.GeoJSONSource;
+      const zoom = await src.getClusterExpansionZoom(clusterId as number);
+      const coords = (features[0].geometry as { coordinates: [number, number] }).coordinates;
+      map.easeTo({ center: coords, zoom });
+    });
+    map.on("mouseenter", "airbnb-clusters", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "airbnb-clusters", () => {
+      map.getCanvas().style.cursor = "";
+    });
+  });
+
+  function openPopup(e: maplibregl.MapLayerMouseEvent, kind: "airbnb" | "hut") {
+    const f = e.features?.[0];
+    if (!f) return;
+    const p = f.properties ?? {};
+    const cusec = String(p.CUSEC ?? "—");
+    const title = popupTitleTmpl.replace("{cusec}", cusec);
+    const gran = String(p.granularidad ?? "—");
+    const granLabel = T[gran] ?? gran;
+    const lines: string[] = [];
+    lines.push(`<div class="font-bold text-sm mb-1">${escape(title)}</div>`);
+    lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.municipi}:</span> ${escape(String(p.NMUN ?? "—"))}</div>`);
+    lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.isla}:</span> ${escape(String(p.isla ?? "—"))}</div>`);
+    if (kind === "airbnb") {
+      const listings = Number(p.airbnb_listings ?? 0);
+      const plazas = Number(p.airbnb_accommodates_total ?? 0);
+      lines.push(`<div class="text-xs text-stone-700 mt-1"><span class="text-stone-500">${T.listings}:</span> <b>${fmt(listings)}</b></div>`);
+      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(plazas)}</b></div>`);
+    } else {
+      const regs = Number(p.hut_registros ?? 0);
+      const plazas = Number(p.hut_plazas ?? 0);
+      lines.push(`<div class="text-xs text-stone-700 mt-1"><span class="text-stone-500">${T.hut_registros}:</span> <b>${fmt(regs)}</b></div>`);
+      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(plazas)}</b></div>`);
+    }
+    lines.push(`<div class="text-[10px] text-stone-500 mt-1 italic">${T.granularitat}: ${granLabel}</div>`);
+    new Popup({ closeButton: true })
+      .setLngLat(e.lngLat)
+      .setHTML(lines.join(""))
+      .addTo(map);
+  }
+
+  function escape(s: string) {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+</script>

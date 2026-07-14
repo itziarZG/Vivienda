@@ -1,0 +1,12 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import Mapa from "../components/Mapa.astro";
+import { getLangFromAstroCookies, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+---
+
+<Base lang={lang} active="map" title={undefined} description={undefined}>
+  <Mapa />
+</Base>

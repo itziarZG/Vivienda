@@ -1,0 +1,62 @@
+---
+import { t, type Lang } from "../i18n";
+import LanguageToggle from "./LanguageToggle.astro";
+
+interface Props {
+  lang?: Lang;
+  active: "home" | "map" | "methodology";
+}
+
+const { lang: langProp, active } = Astro.props;
+const lang: Lang = langProp ?? "ca";
+const path = Astro.url.pathname;
+const isHome = path === "/" || path === "";
+const isMap = path.startsWith("/mapa");
+const isMetod = path.startsWith("/metodologia");
+
+const navLink = (key: "home" | "map" | "methodology") =>
+  `text-sm font-medium px-3 py-1.5 rounded transition-colors ${
+    active === key
+      ? "text-orange-700 bg-orange-50"
+      : "text-stone-700 hover:bg-stone-100"
+  }`;
+---
+
+<header class="border-b border-stone-200 bg-white sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-baseline gap-2 group">
+      <span class="text-lg font-bold text-stone-900 group-hover:text-orange-700">
+        {t(lang, "site.title")}
+      </span>
+      <span class="text-xs text-stone-500 hidden md:inline">
+        {t(lang, "site.tagline")}
+      </span>
+    </a>
+    <nav class="flex items-center gap-1">
+      <a
+        href="/"
+        class={navLink("home")}
+        aria-current={isHome ? "page" : undefined}
+      >
+        {t(lang, "nav.home")}
+      </a>
+      <a
+        href="/mapa"
+        class={navLink("map")}
+        aria-current={isMap ? "page" : undefined}
+      >
+        {t(lang, "nav.map")}
+      </a>
+      <a
+        href="/metodologia"
+        class={navLink("methodology")}
+        aria-current={isMetod ? "page" : undefined}
+      >
+        {t(lang, "nav.methodology")}
+      </a>
+      <span class="ml-2 pl-2 border-l border-stone-200">
+        <LanguageToggle />
+      </span>
+    </nav>
+  </div>
+</header>

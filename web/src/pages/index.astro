@@ -1,0 +1,148 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import CifraImpacto from "../components/CifraImpacto.astro";
+import { getDataset, totals } from "../data/dataset";
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+
+const dataset = getDataset();
+const t0 = totals(dataset);
+const eivissa = dataset.resumen_por_isla.find((r) => r.isla === "Eivissa")!;
+const santJosepShare =
+  eivissa.hut_plazas > 0 ? 7296 / eivissa.hut_plazas : 0;
+const fmtInt = new Intl.NumberFormat(lang === "ca" ? "ca-ES" : "es-ES");
+const fmtPct = (x: number) => `${(x * 100).toFixed(0)}%`;
+---
+
+<Base lang={lang} active="home">
+  <section class="bg-gradient-to-b from-orange-50 to-stone-50 border-b border-stone-200">
+    <div class="max-w-4xl mx-auto px-4 py-16 sm:py-24 text-center">
+      <p class="text-xs sm:text-sm font-medium text-orange-700 uppercase tracking-wider mb-4">
+        {t(lang, "home.hero_eyebrow")}
+      </p>
+      <h1 class="text-3xl sm:text-5xl font-bold text-stone-900 leading-tight mb-6">
+        {t(lang, "home.hero_title")}
+      </h1>
+      <p class="text-base sm:text-lg text-stone-700 max-w-2xl mx-auto mb-8">
+        {t(lang, "home.hero_subtitle")}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="/mapa"
+          class="inline-flex items-center justify-center px-6 py-3 bg-orange-700 text-white font-medium rounded hover:bg-orange-800 transition-colors"
+        >
+          {t(lang, "home.cta_map")}
+        </a>
+        <a
+          href="/metodologia"
+          class="inline-flex items-center justify-center px-6 py-3 border border-stone-300 text-stone-800 font-medium rounded hover:bg-stone-100 transition-colors"
+        >
+          {t(lang, "home.cta_methodology")}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "home.section_evidence_title")}
+    </h2>
+    <p class="text-stone-600 mb-8">{t(lang, "home.section_evidence_lead")}</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <CifraImpacto
+        valor={fmtInt.format(t0.airbnb_listings)}
+        label={t(lang, "home.stat_airbnb_label")}
+        sub={t(lang, "home.stat_airbnb_sub")}
+      />
+      <CifraImpacto
+        valor={fmtInt.format(t0.airbnb_entire_homes + eivissa.hut_registros)}
+        label={t(lang, "home.stat_plazas_label")}
+        sub={t(lang, "home.stat_plazas_sub")}
+      />
+      <CifraImpacto
+        valor={fmtInt.format(eivissa.hut_plazas)}
+        label={t(lang, "home.stat_hut_label")}
+        sub={t(lang, "home.stat_hut_sub")}
+      />
+      <CifraImpacto
+        valor={fmtPct(santJosepShare)}
+        label={t(lang, "home.stat_legal_share_label")}
+        sub={t(lang, "home.stat_legal_share_sub")}
+      />
+      <CifraImpacto
+        valor="16,2%"
+        label={t(lang, "home.stat_vacant_label")}
+        sub={t(lang, "home.stat_vacant_sub")}
+      />
+      <CifraImpacto
+        valor="6,9%"
+        label={t(lang, "home.stat_sporadic_label")}
+        sub={t(lang, "home.stat_sporadic_sub")}
+      />
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "home.narrative_title")}
+    </h2>
+    <div class="prose prose-stone max-w-none space-y-4 text-stone-800 leading-relaxed">
+      <p>{t(lang, "home.narrative_p1")}</p>
+      <p>{t(lang, "home.narrative_p2")}</p>
+      <p class="text-lg font-medium text-stone-900 border-l-4 border-orange-700 pl-4">
+        {t(lang, "home.narrative_p3")}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "home.section_per_island_title")}
+    </h2>
+    <div class="overflow-x-auto border border-stone-200 rounded-lg bg-white">
+      <table class="w-full text-sm">
+        <thead class="bg-stone-100 text-stone-700">
+          <tr>
+            <th class="text-left px-4 py-2 font-medium">{t(lang, "home.col_island")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "home.col_sections")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "home.col_listings")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "home.col_hut")}</th>
+            <th class="text-right px-4 py-2 font-medium">{t(lang, "home.col_hut_places")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dataset.resumen_por_isla.map((r) => (
+            <tr class="border-t border-stone-200">
+              <td class="px-4 py-2 font-medium">{r.isla}</td>
+              <td class="px-4 py-2 text-right tabular-nums">{fmtInt.format(r.secciones)}</td>
+              <td class="px-4 py-2 text-right tabular-nums">{fmtInt.format(r.airbnb_listings)}</td>
+              <td class="px-4 py-2 text-right tabular-nums">{fmtInt.format(r.hut_registros)}</td>
+              <td class="px-4 py-2 text-right tabular-nums">{fmtInt.format(r.hut_plazas)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "home.section_story_title")}
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {[1, 2, 3, 4].map((n) => (
+        <article class="border border-stone-200 rounded-lg p-5 bg-white">
+          <h3 class="font-bold text-lg mb-2 text-orange-700">
+            {t(lang, `home.story_card${n}_title`)}
+          </h3>
+          <p class="text-sm text-stone-700 leading-relaxed">
+            {t(lang, `home.story_card${n}_body`)}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>

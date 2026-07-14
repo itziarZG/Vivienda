@@ -1,0 +1,39 @@
+---
+import { getLangFromCookies, t, type Lang } from "../i18n";
+
+const cookieHeader = Astro.request.headers.get("cookie");
+const lang: Lang = getLangFromCookies(cookieHeader);
+const other: Lang = lang === "ca" ? "es" : "ca";
+const toggleLabel = t(lang, "lang_toggle.to_" + other);
+---
+
+<div class="flex items-center gap-2">
+  <span class="text-xs text-stone-500 hidden sm:inline">
+    {t(lang, "lang_toggle.label")}:
+  </span>
+  <button
+    type="button"
+    data-lang-toggle={other}
+    aria-label={toggleLabel}
+    class="text-xs font-medium px-2 py-1 border border-stone-300 rounded hover:bg-stone-100 transition-colors"
+  >
+    {toggleLabel}
+  </button>
+</div>
+
+<script>
+  document.addEventListener("click", (ev) => {
+    const target = ev.target as HTMLElement | null;
+    if (!target) return;
+    const btn = target.closest("[data-lang-toggle]") as HTMLElement | null;
+    if (!btn) return;
+    const next = btn.getAttribute("data-lang-toggle");
+    if (next !== "ca" && next !== "es") return;
+    const oneYear = 60 * 60 * 24 * 365;
+    document.cookie = `lang=${next};path=/;max-age=${oneYear};samesite=lax`;
+    try {
+      localStorage.setItem("lang", next);
+    } catch {}
+    location.reload();
+  });
+</script>

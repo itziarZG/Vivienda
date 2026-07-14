@@ -1,0 +1,166 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+---
+
+<Base lang={lang} active="methodology">
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 mb-3">
+      {t(lang, "methodology.title")}
+    </h1>
+    <p class="text-stone-600 text-lg">{t(lang, "methodology.lead")}</p>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-stone-900 mb-4 border-b border-stone-200 pb-2">
+      {t(lang, "methodology.section_sources_title")}
+    </h2>
+    <div class="space-y-5">
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.src_ine_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.src_ine_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.src_airbnb_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.src_airbnb_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.src_hut_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.src_hut_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.src_ibestat_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.src_ibestat_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.src_shapefile_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.src_shapefile_body")}
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-stone-900 mb-4 border-b border-stone-200 pb-2">
+      {t(lang, "methodology.section_granularity_title")}
+    </h2>
+    <div class="space-y-3 text-stone-800 leading-relaxed">
+      <p>{t(lang, "methodology.granularity_p1")}</p>
+      <p>{t(lang, "methodology.granularity_p2")}</p>
+      <p class="text-stone-900 font-medium border-l-4 border-orange-700 pl-4">
+        {t(lang, "methodology.granularity_p3")}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-stone-900 mb-4 border-b border-stone-200 pb-2">
+      {t(lang, "methodology.section_limits_title")}
+    </h2>
+    <div class="space-y-5">
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.limit_ine_ccaa_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.limit_ine_ccaa_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.limit_airbnb_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.limit_airbnb_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.limit_scrape_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.limit_scrape_body")}
+        </p>
+      </article>
+      <article>
+        <h3 class="font-semibold text-stone-900 mb-1">
+          {t(lang, "methodology.limit_license_title")}
+        </h3>
+        <p class="text-sm text-stone-700 leading-relaxed">
+          {t(lang, "methodology.limit_license_body")}
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-stone-900 mb-4 border-b border-stone-200 pb-2">
+      {t(lang, "methodology.section_snapshots_title")}
+    </h2>
+    <div class="overflow-x-auto border border-stone-200 rounded-lg bg-white">
+      <table class="w-full text-sm">
+        <tbody>
+          <tr class="border-b border-stone-200">
+            <td class="px-4 py-2 text-stone-600">{t(lang, "methodology.snap_airbnb")}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-900 font-medium">2026-06</td>
+          </tr>
+          <tr class="border-b border-stone-200">
+            <td class="px-4 py-2 text-stone-600">{t(lang, "methodology.snap_hut")}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-900 font-medium">2026-07-14</td>
+          </tr>
+          <tr class="border-b border-stone-200">
+            <td class="px-4 py-2 text-stone-600">{t(lang, "methodology.snap_ibestat")}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-900 font-medium">2019</td>
+          </tr>
+          <tr class="border-b border-stone-200">
+            <td class="px-4 py-2 text-stone-600">{t(lang, "methodology.snap_ine")}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-900 font-medium">2024 / 2025-05</td>
+          </tr>
+          <tr>
+            <td class="px-4 py-2 text-stone-600">{t(lang, "methodology.snap_shapefile")}</td>
+            <td class="px-4 py-2 text-right tabular-nums text-stone-900 font-medium">2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-stone-900 mb-4 border-b border-stone-200 pb-2">
+      {t(lang, "methodology.section_license_title")}
+    </h2>
+    <p class="text-sm text-stone-700 leading-relaxed mb-3">
+      {t(lang, "methodology.license_body")}
+    </p>
+    <p class="text-sm text-stone-700 leading-relaxed">
+      <span class="font-semibold">{t(lang, "methodology.contact")}:</span>
+      <a
+        href="https://github.com/"
+        class="text-orange-700 hover:underline ml-1"
+        rel="noopener"
+      >github.com/...</a>
+    </p>
+  </section>
+</Base>
