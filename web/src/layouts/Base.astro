@@ -7,17 +7,23 @@ import { t, type Lang } from "../i18n";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
   active: "home" | "map" | "methodology";
   lang?: Lang;
 }
 
-const { title, description, active, lang: langProp } = Astro.props;
+const { title, description, image, active, lang: langProp } = Astro.props;
 const cookieVal = Astro.cookies.get("lang")?.value;
 const lang: Lang = langProp ?? (cookieVal === "es" ? "es" : "ca");
 
 const fullTitle = title ? `${title} · ${t(lang, "site.title")}` : t(lang, "site.title");
 const fullDescription = description ?? t(lang, "site.description");
 const siteTitle = t(lang, "site.title");
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://casestancades.vercel.app";
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
+const ogImage = image ?? `${siteUrl}/og-image.png`;
+const ogLocale = lang === "es" ? "es_ES" : "ca_ES";
 ---
 
 <!doctype html>
@@ -26,15 +32,23 @@ const siteTitle = t(lang, "site.title");
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalUrl} />
     <title>{fullTitle}</title>
     <meta name="description" content={fullDescription} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={fullDescription} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={siteTitle} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:site_name" content={siteTitle} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={fullDescription} />
+    <meta name="twitter:image" content={ogImage} />
   </head>
   <body class="bg-stone-50 text-stone-900">
     <Header lang={lang} active={active} />

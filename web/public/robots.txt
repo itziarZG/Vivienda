@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://casestancades.vercel.app/sitemap-index.xml

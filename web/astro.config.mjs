@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 // Vite plugin inline: añade Content-Type correcto para .pmtiles y .geojson
 // en dev server. Sin esto, Astro/Vite sirve .pmtiles con Content-Type vacío
@@ -27,6 +28,8 @@ function assetMimePlugin() {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://casestancades.vercel.app',
+  integrations: [sitemap()],
   vite: {
     plugins: [assetMimePlugin(), tailwindcss()],
   },
