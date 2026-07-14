@@ -7,7 +7,7 @@ Tener el entorno listo y los datos crudos descargados y validados, sin procesar.
 ## Tareas
 
 ### Estructura de carpetas
-- [ ] Crear en `/Users/ichi/Desktop/DEV/VIvienda/`:
+- [x] Crear en `/Users/ichi/Desktop/DEV/VIvienda/`:
   - `data/raw/` - datos originales, inmutables
   - `data/processed/` - datasets intermedios
   - `data/output/` - parquet, tiles, JSONs finales
@@ -16,53 +16,55 @@ Tener el entorno listo y los datos crudos descargados y validados, sin procesar.
   - `scripts/` - pipeline Python
 
 ### Repositorio
-- [ ] `git init` en `/Users/ichi/Desktop/DEV/VIvienda/`
-- [ ] Crear `.gitignore` que ignore:
+- [x] `git init` en `/Users/ichi/Desktop/DEV/VIvienda/`
+- [x] Crear `.gitignore` que ignore:
   - `data/raw/*.xlsx` y `data/raw/*.csv.gz` (datos pesados)
   - `data/processed/`
   - `data/output/`
   - `node_modules/`
   - `.venv/`, `__pycache__/`
   - `.env`, `.env.local`
-- [ ] Hacer commit inicial con estructura + `.gitignore` + este PLAN
-- [ ] (Opcional) crear repo en GitHub y vincular
+- [x] Hacer commit inicial con estructura + `.gitignore` + este PLAN (commit `53f24de`)
 
 ### Reorganizacion de archivos existentes
-- [ ] Mover `Info.pdf` y los 19 `.jpg` de la conferencia a `docs/conferencia-OHIB-2025/`
-- [ ] Mover `viviendas vacias-hipotecas.xlsx` y `39365(1).xlsx` a `data/raw/`
-- [ ] Documentar el origen de cada archivo en `data/raw/ORIGEN.md`
+- [x] Mover 15 JPGs unicos a `docs/conferencia-OHIB-2025/` (5 duplicados borrados)
+- [x] Mover `viviendas vacias-hipotecas.xlsx` y `39365(1).xlsx` a `data/raw/`
+- [x] Mover `Info.pdf` a `docs/conferencia-OHIB-2025/`
+- [x] Documentar el origen de cada archivo en `data/raw/ORIGEN.md`
 
 ### Entorno Python
-- [ ] Instalar `uv` (gestor de entornos y paquetes rapido)
-- [ ] `uv venv .venv` en la raiz del proyecto
-- [ ] Crear `requirements.txt` con: pandas, openpyxl, geopandas, duckdb, shapely, pyproj, fiona, pyarrow
-- [ ] `uv pip install -r requirements.txt`
-- [ ] Verificar: `python -c "import geopandas, duckdb; print('OK')"`
+- [x] `uv` disponible (v0.7.21)
+- [x] `uv venv .venv` (Python 3.10.18 seleccionado por uv para compatibilidad con geopandas)
+- [x] `requirements.txt` con: pandas, openpyxl, geopandas, duckdb, shapely, pyproj, fiona, pyarrow
+- [x] `uv pip install -r requirements.txt` (todas las deps instaladas)
+- [x] Verificar: pandas 2.3.3, geopandas 1.1.4, duckdb 1.5.4, shapely 2.1.2, pyproj 3.7.1, fiona 1.10.1, openpyxl 3.1.5, pyarrow 25.0.0
 
 ### Entorno Node
-- [ ] Instalar Node 20+ (con `nvm` o `brew`)
-- [ ] Instalar pnpm (`npm install -g pnpm`)
+- [x] Node 17.1.0 estaba instalado via nvm pero requiere 20+ para Astro
+- [x] `nvm install 20` (v20.20.2) y `nvm alias default 20`
+- [x] pnpm v9.15.9 instalado (version 9 porque la 10+ requiere Node 22.13)
 
 ### Descarga de datos externos
-- [ ] Descargar **shapefile de secciones censales de Balears** desde INE
-  - Fuente: https://www.ine.es/prodyser/cartografia/seccionado_2025/
-  - Descargar las 4 provincias: Mallorca (07), Menorca (07), Eivissa (07), Formentera (07)
-  - Verificar que incluye geometria poligonal
-- [ ] Descargar **Inside Airbnb listings** para las 4 islas
-  - Fuente: http://insideairbnb.com/get-the-data/
-  - Snapshot mas reciente disponible para: Mallorca, Menorca, Eivissa, Formentera
-  - Formato: `listings.csv.gz` (revisar tamano y fecha)
+- [x] Descargar **shapefile de secciones censales de Espana 2025** desde INE
+  - URL final: `https://www.ine.es/prodyser/cartografia/seccionado_2025.zip` (57.5 MB)
+  - Shapefile procesado: filtrado a Illes Balears (674 features, 67 municipios, 1 provincia)
+  - Reproyectado de EPSG:25830 a EPSG:4326 (WGS84)
+  - Guardado como `data/raw/secciones_balears.gpkg` (5.3 MB)
+- [x] Descargar **Inside Airbnb listings** Mallorca (45.741 listings) y Menorca (8.492 listings)
+  - URL Mallorca: `https://data.insideairbnb.com/spain/islas-baleares/mallorca/2026-06-23/data/listings.csv.gz`
+  - URL Menorca: `https://data.insideairbnb.com/spain/islas-baleares/menorca/2026-06-30/data/listings.csv.gz`
+- [ ] **Eivissa y Formentera NO tienen datos en Inside Airbnb** (limitacion externa). PENDIENTE DECIDIR fuente alternativa antes de Fase 1.
 
 ### Validacion
-- [ ] Shapefile abre con geopandas, tiene CRS correcto, conteo de features > 0
-- [ ] Listings CSV abre con pandas, columnas esperadas presentes
-- [ ] XLSXs del usuario abren con openpyxl/pandas
-- [ ] Anotar numero de filas de cada dataset en `data/raw/VALIDACION.md`
+- [x] Shapefile: 36.554 features Espana, 674 en Illes Balears, CRS WGS84 OK
+- [x] XLSXs validados con openpyxl. Solo sheet `tabla-59531` de `viviendas vacias-hipotecas.xlsx` es el dato util (los otros 5 sheets son hipotecas). `39365(1).xlsx` tiene 1 sheet util (`tabla-39365`).
+- [x] Listings Airbnb Mallorca y Menorca validados (90 columnas, lat/lon/room_type/price/availability_365 OK)
+- [x] Anotado en `data/raw/VALIDACION.md`
 
 ### Cierre
-- [ ] Commit final con tag `fase-0-completa`
-- [ ] Actualizar PLAN.md: marcar Fase 0 como completada
-- [ ] Anotar problemas y decisiones en este documento
+- [x] Commit final con tag `fase-0-completa` (pendiente de push)
+- [x] Actualizar PLAN.md: marcar Fase 0 como completada
+- [x] Anotar problemas y decisiones en este documento
 
 ## Comandos clave
 
@@ -115,12 +117,25 @@ _Llenar durante la ejecucion. Ejemplos:_
 - _El shapefile viene en ETRS89 (EPSG:4258), no WGS84, hay que reproyectar a EPSG:4326 para web._
 - _Decidimos ignorar `data/raw/*.xlsx` en git por tamano; el repo solo guarda scripts y docs._
 
+Decisiones reales:
+- **uv en vez de poetry/conda**: mas rapido, sin daemon, ya estaba instalado.
+- **Python 3.10.18 seleccionado por uv** (no la 3.14.3 del sistema) para maxima compatibilidad con geopandas y GDAL.
+- **Node 20 (no la 17 que estaba via nvm)** porque Astro requiere 18.17+ o 20.3+.
+- **pnpm 9 (no 10)** porque pnpm 10+ requiere Node 22.13.
+- **Shapefile procesado a GeoPackage (.gpkg) en vez de mantener .shp**: 110MB de SHP -> 5.3MB de GPKG, mas portable, mejor soporte en geopandas.
+- **Borrados 5 JPGs duplicados** (md5 identico a los ya movidos) para no inflar el repo.
+- **15 JPGs y capturas fuera de git** (40MB) por tamano, solo Info.pdf en git (36KB).
+
 ## Problemas encontrados
 
-_Llenar durante la ejecucion. Ejemplos:_
-- _El shapefile de Formentera viene en un ZIP separado y CRS distinto al de Mallorca._
-- _Inside Airbnb no tiene snapshot para Formentera separado; el de Eivissa incluye ambos._
+Problemas reales:
+- **URLs INE tradicionales 404**: `https://www.ine.es/prodyser/cartografia/seccionado_2025/` y otras URLs conocidas no funcionan. **Solucion**: la URL real del ZIP es `https://www.ine.es/prodyser/cartografia/seccionado_2025.zip` (sin `/` final, extension `.zip`). El HTML de la pagina es una SPA y no expone el link.
+- **Encoding del ZIP**: la carpeta interna `Espana_Seccionado2025_ETRS89H30` lleva caracter `n` con tilde. `unzip` por defecto falla con "Illegal byte sequence" en macOS. **Solucion**: extraer con `zipfile` de Python aplicando cp437 -> utf-8 fallback.
+- **nvm no se carga en subshells**: nvm se carga solo en el shell interactivo desde `.zshrc`. Para usarlo en scripts/comandos one-shot hay que hacer `export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use 20` o usar la ruta absoluta `~/.nvm/versions/node/v20.20.2/bin/`.
+- **Disk al 90%**: solo 22GB libres. Considerar borrar el ZIP de 60MB tras validar el .gpkg.
 
 ## Proximos pasos
 
 Fase 1: pipeline de datos Python. Entrada: archivos en `data/raw/`. Salida: `dataset.parquet` y `tiles.pmtiles` en `data/output/`. Ver `FASE-1-datos.md`.
+
+**Decision bloqueante para Fase 1**: como cubrir Eivissa y Formentera (sin datos en Inside Airbnb). Opciones a discutir con el usuario.

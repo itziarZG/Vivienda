@@ -20,6 +20,10 @@ data/raw/*.mxs
 data/raw/*.qix
 data/raw/*.qpj
 data/raw/*.xml
+data/raw/*.gpkg
+data/raw/*.parquet
+data/raw/*.pmtiles
+data/raw/*.geojson
 
 # Capturas de la conferencia (grandes, locales unicamente)
 docs/**/*.jpg

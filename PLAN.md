@@ -46,7 +46,8 @@ Web publica que cruza dos datos oficiales - INE (consumo electrico por seccion c
 - [x] Plan inicial creado y validado con el usuario
 - [x] `PLAN.md` escrito
 - [x] `FASE-0-setup.md` escrito (pendiente ejecucion)
-- [ ] Fase 0 ejecutada
+- [x] Fase 0 ejecutada (estructura, entornos, shapefile, listings Mallorca+Menorca)
+- [x] Limitacion detectada: Eivissa y Formentera no tienen datos en Inside Airbnb
 - [ ] Fase 1 ejecutada
 - [ ] Fase 2 ejecutada
 - [ ] Fase 3 ejecutada
