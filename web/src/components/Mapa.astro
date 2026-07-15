@@ -544,6 +544,18 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       map.setPaintProperty("secciones-hut-fill", "fill-color", NO_DATA_COLOR);
     }
 
+    // Auto-ocultar círculos de Airbnb cuando la variable no es Airbnb.
+    // Antes: los círculos mostraban siempre el mismo dato (count de listings)
+    // independientemente de la variable, lo que confundía al usuario.
+    const showAirbnbClusters = cfg.scope === "airbnb";
+    const clusterVis: "visible" | "none" = showAirbnbClusters ? "visible" : "none";
+    ["airbnb-clusters", "airbnb-cluster-count", "airbnb-unclustered"].forEach((id) => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", clusterVis);
+    });
+    // Mantener el toggle visual en sync con la realidad
+    const clusterToggle = document.getElementById("toggle-clusters") as HTMLInputElement | null;
+    if (clusterToggle) clusterToggle.checked = showAirbnbClusters;
+
     updateLegend(cfg);
     const desc = document.getElementById("variable-desc");
     if (desc) desc.textContent = cfg.desc;
