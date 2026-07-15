@@ -8,24 +8,30 @@ interface VariableOption {
   labelKey: string;
   descKey: string;
   scope: "airbnb" | "hut" | "all";
+  groupKey: string;
 }
 
 const variableOptions: VariableOption[] = [
-  { value: "airbnb_listings", labelKey: "map.variable_airbnb_listings", descKey: "map.variable_airbnb_listings_desc", scope: "airbnb" },
-  { value: "airbnb_entire_homes", labelKey: "map.variable_airbnb_entire", descKey: "map.variable_airbnb_entire_desc", scope: "airbnb" },
-  { value: "airbnb_revenue_total", labelKey: "map.variable_airbnb_revenue", descKey: "map.variable_airbnb_revenue_desc", scope: "airbnb" },
-  { value: "airbnb_con_licencia", labelKey: "map.variable_airbnb_con_licencia", descKey: "map.variable_airbnb_con_licencia_desc", scope: "airbnb" },
-  { value: "airbnb_per_1000", labelKey: "map.variable_airbnb_per_1000", descKey: "map.variable_airbnb_per_1000_desc", scope: "airbnb" },
-  { value: "hut_plazas", labelKey: "map.variable_hut_plazas", descKey: "map.variable_hut_plazas_desc", scope: "hut" },
-  { value: "hut_registros", labelKey: "map.variable_hut_registros", descKey: "map.variable_hut_registros_desc", scope: "hut" },
-  { value: "viviendas_totales", labelKey: "map.variable_viviendas_totales", descKey: "map.variable_viviendas_totales_desc", scope: "all" },
-  { value: "viviendas_vacantes", labelKey: "map.variable_viviendas_vacantes", descKey: "map.variable_viviendas_vacantes_desc", scope: "all" },
-  { value: "consumo_p10_muy_bajo", labelKey: "map.variable_consumo_p10_muy_bajo", descKey: "map.variable_consumo_p10_muy_bajo_desc", scope: "all" },
-  { value: "consumo_p10_bajo", labelKey: "map.variable_consumo_p10_bajo", descKey: "map.variable_consumo_p10_bajo_desc", scope: "all" },
-  { value: "consumo_p50_medio", labelKey: "map.variable_consumo_p50_medio", descKey: "map.variable_consumo_p50_medio_desc", scope: "all" },
-  { value: "consumo_p90_alto", labelKey: "map.variable_consumo_p90_alto", descKey: "map.variable_consumo_p90_alto_desc", scope: "all" },
-  { value: "ratio_p10_p50_consumo", labelKey: "map.variable_ratio_p10_p50", descKey: "map.variable_ratio_p10_p50_desc", scope: "all" },
-  { value: "consumo_p50_kwh", labelKey: "map.variable_consumo_p50", descKey: "map.variable_consumo_p50_desc", scope: "all" },
+  // Grupo 1: Vivienda (INE Censo 2021)
+  { value: "viviendas_totales", labelKey: "map.variable_viviendas_totales", descKey: "map.variable_viviendas_totales_desc", scope: "all", groupKey: "map.group_vivienda" },
+  { value: "viviendas_vacantes", labelKey: "map.variable_viviendas_vacantes", descKey: "map.variable_viviendas_vacantes_desc", scope: "all", groupKey: "map.group_vivienda" },
+  // Grupo 2: Consumo eléctrico
+  { value: "consumo_p10_muy_bajo", labelKey: "map.variable_consumo_p10_muy_bajo", descKey: "map.variable_consumo_p10_muy_bajo_desc", scope: "all", groupKey: "map.group_consumo" },
+  { value: "consumo_p10_bajo", labelKey: "map.variable_consumo_p10_bajo", descKey: "map.variable_consumo_p10_bajo_desc", scope: "all", groupKey: "map.group_consumo" },
+  { value: "consumo_p50_medio", labelKey: "map.variable_consumo_p50_medio", descKey: "map.variable_consumo_p50_medio_desc", scope: "all", groupKey: "map.group_consumo" },
+  { value: "consumo_p90_alto", labelKey: "map.variable_consumo_p90_alto", descKey: "map.variable_consumo_p90_alto_desc", scope: "all", groupKey: "map.group_consumo" },
+  // Grupo 3: Presión Airbnb
+  { value: "airbnb_listings", labelKey: "map.variable_airbnb_listings", descKey: "map.variable_airbnb_listings_desc", scope: "airbnb", groupKey: "map.group_presion" },
+  { value: "airbnb_entire_homes", labelKey: "map.variable_airbnb_entire", descKey: "map.variable_airbnb_entire_desc", scope: "airbnb", groupKey: "map.group_presion" },
+  { value: "airbnb_revenue_total", labelKey: "map.variable_airbnb_revenue", descKey: "map.variable_airbnb_revenue_desc", scope: "airbnb", groupKey: "map.group_presion" },
+  { value: "airbnb_per_1000", labelKey: "map.variable_airbnb_per_1000", descKey: "map.variable_airbnb_per_1000_desc", scope: "airbnb", groupKey: "map.group_presion" },
+  // Grupo 4: Vivienda turística legal (HUT)
+  { value: "hut_registros", labelKey: "map.variable_hut_registros", descKey: "map.variable_hut_registros_desc", scope: "hut", groupKey: "map.group_hut" },
+  { value: "hut_plazas", labelKey: "map.variable_hut_plazas", descKey: "map.variable_hut_plazas_desc", scope: "hut", groupKey: "map.group_hut" },
+  // Grupo 5: Avanzado
+  { value: "airbnb_con_licencia", labelKey: "map.variable_airbnb_con_licencia", descKey: "map.variable_airbnb_con_licencia_desc", scope: "airbnb", groupKey: "map.group_avanzado" },
+  { value: "ratio_p10_p50_consumo", labelKey: "map.variable_ratio_p10_p50", descKey: "map.variable_ratio_p10_p50_desc", scope: "all", groupKey: "map.group_avanzado" },
+  { value: "consumo_p50_kwh", labelKey: "map.variable_consumo_p50", descKey: "map.variable_consumo_p50_desc", scope: "all", groupKey: "map.group_avanzado" },
 ];
 
 const popupTitleTmpl = t(lang, "map.popup_title");
@@ -67,9 +73,18 @@ const popupTitleTmpl = t(lang, "map.popup_title");
         id="variable-select"
         class="w-full text-sm border border-stone-300 rounded px-2 py-1 bg-white"
       >
-        {variableOptions.map((o) => (
-          <option value={o.value} data-scope={o.scope}>{t(lang, o.labelKey)}</option>
-        ))}
+        {(() => {
+          const groups = Array.from(new Set(variableOptions.map((o) => o.groupKey)));
+          return groups.map((g) => (
+            <optgroup label={t(lang, g)}>
+              {variableOptions
+                .filter((o) => o.groupKey === g)
+                .map((o) => (
+                  <option value={o.value} data-scope={o.scope}>{t(lang, o.labelKey)}</option>
+                ))}
+            </optgroup>
+          ));
+        })()}
       </select>
       <p id="variable-desc" class="text-[10px] text-stone-500 mt-1 leading-tight"></p>
     </div>
@@ -124,6 +139,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     hut_plazas: lang === "es" ? "Plazas HUT" : "Places HUT",
     viviendas_totales: lang === "es" ? "Viviendas totales" : "Habitatges totals",
     consumo_p50: lang === "es" ? "Mediana consumo kWh" : "Mediana consum kWh",
+    consumo_p10: lang === "es" ? "Consumo p10 (kWh)" : "Consum p10 (kWh)",
     consumo_p10_muy_bajo: lang === "es" ? "Cola bajo consumo (p10)" : "Cua de baix consum (p10)",
     viviendas_vacantes_label: lang === "es" ? "Viv. vacantes" : "Hab. vacants",
     consumo_p10_bajo: lang === "es" ? "Cola consumo bajo (p10)" : "Cua de consum baix (p10)",
@@ -667,16 +683,6 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const gran = String(p.granularidad ?? "—");
     const granLabel =
       gran === "seccion_censal" ? T.seccion_censal : gran === "municipio" ? T.municipio : gran;
-    const listings = Number(p.airbnb_listings ?? 0);
-    const entire = Number(p.airbnb_entire_homes ?? 0);
-    const conLic = Number(p.airbnb_con_licencia ?? 0);
-    const plazas = Number(p.airbnb_accommodates_total ?? 0);
-    const revenue = Number(p.airbnb_revenue_total ?? 0);
-    const regs = Number(p.hut_registros ?? 0);
-    const hPlazas = Number(p.hut_plazas ?? 0);
-    const viviendas = Number(p.viviendas_totales ?? 0);
-    const consumoP50 = Number(p.consumo_p50_kwh ?? 0);
-    const airbnbPer1000 = Number(p.airbnb_listings_por_1000_viviendas ?? 0);
     const lines: string[] = [];
     lines.push(`<div class="font-bold text-sm mb-1">${escape(title)}</div>`);
     lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.municipi}:</span> ${escape(String(p.NMUN ?? "—"))}</div>`);
@@ -685,33 +691,53 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const sectionTitle = (label: string) =>
       `<div class="text-[10px] uppercase tracking-wide text-stone-500 mt-2 mb-0.5 border-t border-stone-200 pt-1">${label}</div>`;
 
-    // Always show INE data (universal)
-    if (viviendas) {
-      lines.push(sectionTitle("INE (Cens 2021)"));
-      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.viviendas_totales}:</span> <b>${fmt(viviendas)}</b></div>`);
-      if (consumoP50) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.consumo_p50}:</span> <b>${fmt(consumoP50)} kWh</b></div>`);
-    }
+    // Popup contextual segun el scope de la variable activa.
+    // Antes mostraba TODA la data siempre -> confuso.
+    const cfg = LAYERS[activeVariable];
+    const row = (label: string, value: string) =>
+      `<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(label)}:</span> <b>${value}</b></div>`;
 
-    if (kind === "airbnb") {
-      lines.push(sectionTitle("Airbnb"));
-      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings}:</span> <b>${fmt(listings)}</b></div>`);
-      if (entire) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.entire_homes}:</span> <b>${fmt(entire)}</b></div>`);
-      if (conLic) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.con_licencia}:</span> <b>${fmt(conLic)}</b></div>`);
-      if (plazas) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings} (plazas):</span> <b>${fmt(plazas)}</b></div>`);
-      if (revenue) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.revenue}:</span> <b>${fmtMoney(revenue)}</b></div>`);
-      if (airbnbPer1000) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.airbnb_per_1000}:</span> <b>${airbnbPer1000.toFixed(1)}</b></div>`);
-    } else if (kind === "hut") {
-      lines.push(sectionTitle("HUT"));
-      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_registros}:</span> <b>${fmt(regs)}</b></div>`);
-      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(hPlazas)}</b></div>`);
-    } else {
-      // kind === "all" — show both Airbnb and HUT data if present
-      if (listings || hPlazas) {
-        lines.push(sectionTitle("Llocs actius"));
-        if (listings) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings}:</span> <b>${fmt(listings)}</b></div>`);
-        if (regs) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_registros}:</span> <b>${fmt(regs)}</b></div>`);
-        if (hPlazas) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(hPlazas)}</b></div>`);
+    // Sección INE (solo si la variable activa es de scope "all" o es consumo/vivienda)
+    if (kind === "all") {
+      const viviendas = Number(p.viviendas_totales ?? 0);
+      const vacantes = Number(p.viviendas_vacantes_estimadas ?? 0);
+      const consumoP50 = Number(p.consumo_p50_kwh ?? 0);
+      const consumoP10 = Number(p.consumo_p10_kwh ?? 0);
+      const ratio = Number(p.ratio_p10_p50_consumo ?? 0);
+      lines.push(sectionTitle("INE (Cens 2021)"));
+      if (cfg) {
+        const val = Number(p[cfg.field] ?? 0);
+        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
       }
+      if (viviendas) lines.push(row(T.viviendas_totales, fmt(viviendas)));
+      if (vacantes) lines.push(row(T.viviendas_vacantes, fmt(vacantes)));
+      if (consumoP10) lines.push(row(T.consumo_p10, `${fmt(consumoP10)} kWh`));
+      if (consumoP50 && consumoP50 !== consumoP10) lines.push(row(T.consumo_p50, `${fmt(consumoP50)} kWh`));
+      if (ratio && !Number.isNaN(ratio)) lines.push(row(T.ratio_p10_p50, ratio.toFixed(2)));
+    } else if (kind === "airbnb") {
+      const listings = Number(p.airbnb_listings ?? 0);
+      const entire = Number(p.airbnb_entire_homes ?? 0);
+      const plazas = Number(p.airbnb_accommodates_total ?? 0);
+      const revenue = Number(p.airbnb_revenue_total ?? 0);
+      lines.push(sectionTitle("Airbnb (Inside Airbnb, juny 2026)"));
+      if (cfg) {
+        const val = Number(p[cfg.field] ?? 0);
+        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
+      }
+      if (listings) lines.push(row(T.listings, fmt(listings)));
+      if (entire) lines.push(row(T.entire_homes, fmt(entire)));
+      if (plazas) lines.push(row(T.listings + " (plazas)", fmt(plazas)));
+      if (revenue) lines.push(row(T.revenue, fmtMoney(revenue)));
+    } else if (kind === "hut") {
+      const regs = Number(p.hut_registros ?? 0);
+      const hPlazas = Number(p.hut_plazas ?? 0);
+      lines.push(sectionTitle("HUT (juliol 2026)"));
+      if (cfg) {
+        const val = Number(p[cfg.field] ?? 0);
+        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
+      }
+      if (regs) lines.push(row(T.hut_registros, fmt(regs)));
+      if (hPlazas) lines.push(row(T.hut_plazas, fmt(hPlazas)));
     }
     lines.push(`<div class="text-[10px] text-stone-500 mt-1 italic">${T.granularitat}: ${granLabel}</div>`);
     new Popup({ closeButton: true })
