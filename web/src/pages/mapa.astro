@@ -2,18 +2,18 @@
 export const prerender = false;
 import Base from "../layouts/Base.astro";
 import Mapa from "../components/Mapa.astro";
-import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+import { getLangFromAstroCookies, t, tArray, type Lang } from "../i18n";
 
 const lang: Lang = getLangFromAstroCookies(Astro.cookies);
 const fmt = new Intl.NumberFormat(lang === "ca" ? "ca-ES" : "es-ES");
-const buckets = t(lang, "map.consumo_distribucion_buckets") as Array<{
+const buckets = tArray<{
   label: string;
   viviendas: number;
   pct: number;
   interpretacion: string;
-}>;
+}>(lang, "map.consumo_distribucion_buckets");
 const totalViviendas = buckets.reduce((s, b) => s + b.viviendas, 0);
-const maxPct = Math.max(...buckets.map((b) => b.pct));
+const maxPct = buckets.length ? Math.max(...buckets.map((b) => b.pct)) : 1;
 ---
 
 <Base lang={lang} active="map" title={undefined} description={undefined}>
