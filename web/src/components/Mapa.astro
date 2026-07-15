@@ -3,14 +3,6 @@ import { getLangFromAstroCookies, t, type Lang } from "../i18n";
 
 const lang: Lang = getLangFromAstroCookies(Astro.cookies);
 
-const filterOptions = [
-  { value: "all", label: t(lang, "map.isla_all") },
-  { value: "Mallorca", label: "Mallorca" },
-  { value: "Menorca", label: "Menorca" },
-  { value: "Eivissa", label: "Eivissa" },
-  { value: "Formentera", label: "Formentera" },
-];
-
 interface VariableOption {
   value: string;
   labelKey: string;
@@ -59,20 +51,6 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     class="absolute top-3 left-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 w-64 max-w-[calc(100vw-1.5rem)]"
   >
     <div class="mb-2">
-      <label for="isla-filter" class="block text-xs font-medium text-stone-700 mb-1">
-        {t(lang, "map.isla_filter_label")}
-      </label>
-      <select
-        id="isla-filter"
-        class="w-full text-sm border border-stone-300 rounded px-2 py-1 bg-white"
-      >
-        {filterOptions.map((o) => (
-          <option value={o.value}>{o.label}</option>
-        ))}
-      </select>
-    </div>
-
-    <div class="border-t border-stone-200 pt-2 mb-2">
       <label for="variable-select" class="block text-xs font-medium text-stone-700 mb-1">
         {t(lang, "map.variable_label")}
       </label>
@@ -124,6 +102,8 @@ const popupTitleTmpl = t(lang, "map.popup_title");
   const lang = (shell.dataset.lang as "ca" | "es") ?? "ca";
   const popupTitleTmpl = shell.dataset.popupTitleTmpl ?? "Secció {cusec}";
 
+  const NO_DATA_COLOR = "#d6d3d1";
+
   const T: Record<string, string> = {
     municipi: lang === "es" ? "Municipio" : "Municipi",
     isla: lang === "es" ? "Isla" : "Illa",
@@ -137,13 +117,12 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     seccion_censal: lang === "es" ? "sección censal" : "secció censal",
     municipio: "municipi",
     illa: "illa",
-    empty: lang === "es" ? "Sin datos" : "Sense dades",
+    no_data: lang === "es" ? "Sin datos para esta variable" : "Sense dades per a aquesta variable",
     legend_applies_to: lang === "es" ? "Aplica a" : "Aplica a",
     legend_islands_mm: lang === "es" ? "Mallorca / Menorca (sección censal)" : "Mallorca / Menorca (secció censal)",
     legend_islands_ef: lang === "es" ? "Ibiza / Formentera (municipio)" : "Eivissa / Formentera (municipi)",
   };
 
-  // Descriptions per variable (used in selector helper text and legend).
   const DESC: Record<string, string> = {
     airbnb_listings:
       lang === "es"
@@ -171,8 +150,6 @@ const popupTitleTmpl = t(lang, "map.popup_title");
         : "Nombre de registres HUT actius (municipi)",
   };
 
-  // Variable → paint + legend. Airbnb colors are warm (orange),
-  // HUT colors are cool (blue). Each entry's stops double as legend ticks.
   const LAYERS: Record<string, {
     scope: "airbnb" | "hut";
     field: string;
@@ -398,7 +375,6 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     if (loading) loading.style.display = "none";
   }
 
-  // Active variable starts as the default paint already set in style.
   let activeVariable = "airbnb_listings";
 
   function applyVariable(variable: string) {
@@ -408,14 +384,10 @@ const popupTitleTmpl = t(lang, "map.popup_title");
 
     if (cfg.scope === "airbnb") {
       map.setPaintProperty("secciones-airbnb-fill", "fill-color", cfg.colorExpr);
-      map.setPaintProperty("secciones-hut-fill", "fill-color", ["literal", "rgba(0,0,0,0)"]);
-      map.setLayoutProperty("secciones-airbnb-fill", "visibility", "visible");
-      map.setLayoutProperty("secciones-hut-fill", "visibility", "none");
+      map.setPaintProperty("secciones-hut-fill", "fill-color", NO_DATA_COLOR);
     } else {
       map.setPaintProperty("secciones-hut-fill", "fill-color", cfg.colorExpr);
-      map.setPaintProperty("secciones-airbnb-fill", "fill-color", ["literal", "rgba(0,0,0,0)"]);
-      map.setLayoutProperty("secciones-hut-fill", "visibility", "visible");
-      map.setLayoutProperty("secciones-airbnb-fill", "visibility", "none");
+      map.setPaintProperty("secciones-airbnb-fill", "fill-color", NO_DATA_COLOR);
     }
 
     updateLegend(cfg);
@@ -446,43 +418,16 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       <p class="font-semibold text-stone-700 mb-1">${escape(cfg.label)}</p>
       <p class="text-stone-500 mb-1 leading-tight">${escape(cfg.desc)}</p>
       <div class="flex items-center gap-0.5 h-2 rounded overflow-hidden mb-0.5">${swatches}</div>
-      <div class="flex justify-between text-[10px] text-stone-500 mb-2">${labels}</div>
+      <div class="flex justify-between text-[10px] text-stone-500 mb-1">${labels}</div>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-6 h-2 rounded inline-block" style="background:${NO_DATA_COLOR}"></span>
+        <span class="text-[10px] text-stone-500">${escape(T.no_data)}</span>
+      </div>
       <p class="text-[10px] text-stone-500 italic">${T.legend_applies_to}: ${escape(cfg.appliesTo)}</p>
     `;
   }
 
   map.on("load", () => {
-    const applyFilter = (isla: string) => {
-      const filterExpr =
-        isla === "all"
-          ? null
-          : (["==", ["get", "isla"], isla] as unknown as maplibregl.FilterSpecification);
-      ["secciones-airbnb-fill", "secciones-hut-fill", "secciones-line"].forEach((id) => {
-        if (map.getLayer(id)) {
-          map.setFilter(id, filterExpr);
-        }
-      });
-      if (isla === "all") {
-        map.setFilter("airbnb-clusters", null);
-        map.setFilter("airbnb-cluster-count", null);
-        map.setFilter("airbnb-unclustered", null);
-      } else if (isla === "Mallorca" || isla === "Menorca") {
-        const f: maplibregl.FilterSpecification = ["==", ["get", "isla"], isla];
-        map.setFilter("airbnb-clusters", ["all", ["has", "point_count"], f]);
-        map.setFilter("airbnb-cluster-count", ["all", ["has", "point_count"], f]);
-        map.setFilter("airbnb-unclustered", ["all", ["!", ["has", "point_count"]], f]);
-      } else {
-        const none: maplibregl.FilterSpecification = ["==", ["literal", "__none__"], "__none__"];
-        map.setFilter("airbnb-clusters", none);
-        map.setFilter("airbnb-cluster-count", none);
-        map.setFilter("airbnb-unclustered", none);
-      }
-    };
-
-    const select = document.getElementById("isla-filter") as HTMLSelectElement;
-    select?.addEventListener("change", () => applyFilter(select.value));
-    if (select) applyFilter(select.value);
-
     const variableSelect = document.getElementById("variable-select") as HTMLSelectElement;
     variableSelect?.addEventListener("change", () => applyVariable(variableSelect.value));
     if (variableSelect) applyVariable(variableSelect.value);
