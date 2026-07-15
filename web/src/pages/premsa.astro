@@ -14,38 +14,7 @@ interface Quoteable {
   source: string;
 }
 
-const quoteables: Quoteable[] = [
-  {
-    number: "18.175",
-    text: "Listings actius a Airbnb a Mallorca i Menorca",
-    source: "Inside Airbnb, juny 2026",
-  },
-  {
-    number: "18.184",
-    text: "Places turístiques legals (HUT) a Eivissa",
-    source: "Registre HUT Consell d'Eivissa, 14 juliol 2026",
-  },
-  {
-    number: "40%",
-    text: "De les places HUT d'Eivissa es concentren a Sant Josep de sa Talaia",
-    source: "Elaboració pròpia a partir del registre HUT",
-  },
-  {
-    number: "16,2%",
-    text: "D'habitatges buits a Balears",
-    source: "INE, 2024",
-  },
-  {
-    number: "$258M",
-    text: "Ingressos estimats d'Airbnb els darrers 365 dies, Mallorca + Menorca",
-    source: "Inside Airbnb, juny 2026",
-  },
-  {
-    number: "95,4%",
-    text: "Dels listings actius són pisos sencers (Entire home/apt)",
-    source: "Inside Airbnb, juny 2026",
-  },
-];
+const quoteables: Quoteable[] = t(lang, "press.quoteables");
 
 const description = t(lang, "press.lead");
 ---
