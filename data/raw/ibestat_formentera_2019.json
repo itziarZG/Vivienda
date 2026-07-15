@@ -1,0 +1,10 @@
+{
+  "source": "IBESTAT - Institut d'Estadística de les Illes Balears",
+  "year": 2019,
+  "scope": "Formentera (agregado insular)",
+  "metadata": {
+    "total_unidades": 1375,
+    "total_plazas": 14935
+  },
+  "notes": "Dato agregado a nivel insular. No disponible a nivel municipal por parte de IBESTAT. Reconstruido manualmente desde STATS.md del pipeline original. Para más detalle municipal consultar el portal de turisme de Formentera o el IET."
+}

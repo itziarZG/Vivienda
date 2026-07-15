@@ -5,6 +5,8 @@ Carga todas las fuentes de datos y produce el dataset final por seccion censal.
 Entradas (data/raw/):
 - viviendas vacias-hiopotecas.xlsx (INE, CCAA)
 - 39365(1).xlsx (INE, CCAA serie temporal)
+- 59531.csv (INE Censo 2021, viviendas totales por municipio)
+- 59532.csv (INE Censo 2021, percentiles consumo eléctrico por distrito)
 - secciones_balears.gpkg (shapefile procesado, 674 secciones)
 - airbnb_mallorca_listings.csv.gz (Inside Airbnb)
 - airbnb_menorca_listings.csv.gz (Inside Airbnb)
@@ -71,6 +73,53 @@ def load_ine_vivienda_turistica() -> pd.DataFrame:
     return df
 
 
+def load_ine_vivienda_municipio() -> pd.DataFrame:
+    """Carga INE Censo 2021 viviendas totales por municipio (tabla 59531).
+
+    Devuelve DataFrame con columnas: CMUN (5 digitos), NMUN, viviendas_totales.
+    """
+    df = pd.read_csv(RAW / "59531.csv", sep=";", encoding="latin1", low_memory=False)
+    df.columns = ["NAC", "CCAA", "PROV", "MUN", "INDICADOR", "TOTAL"]
+    # Filtrar solo Balears (provincia 07)
+    df = df[df["PROV"].astype(str).str.contains("Balears", na=False, regex=False)].copy()
+    # Solo Viviendas totales
+    df = df[df["INDICADOR"] == "Viviendas totales"].copy()
+    # Extraer CMUN (5 digitos) del campo MUN ("07001 Alaró")
+    df["CMUN"] = df["MUN"].astype(str).str.strip().str[:5]
+    # Limpiar NMUN (quitar prefijo numerico)
+    df["NMUN"] = df["MUN"].astype(str).str.strip().str[6:]
+    # Quitar "Resto de Baleares" (codigo 07999, no es un municipio real)
+    df = df[df["CMUN"] != "07999"].copy()
+    # Convertir TOTAL a entero (viene como "3.246" con punto de miles)
+    df["viviendas_totales"] = (
+        df["TOTAL"].astype(str)
+        .str.replace(".", "", regex=False)
+        .str.replace(",", ".", regex=False)
+    )
+    df["viviendas_totales"] = pd.to_numeric(df["viviendas_totales"], errors="coerce").fillna(0).astype(int)
+    return df[["CMUN", "NMUN", "viviendas_totales"]].reset_index(drop=True)
+
+
+def load_ine_consumo_distrito() -> pd.DataFrame:
+    """Carga INE Censo 2021 percentiles consumo eléctrico por distrito (tabla 59532).
+
+    Devuelve DataFrame con columnas: CDIS (7 digitos), percentil, kwh.
+    """
+    df = pd.read_csv(RAW / "59532.csv", sep=";", encoding="latin1", low_memory=False)
+    df.columns = ["DISTRITO", "PERCENTIL", "TOTAL"]
+    # Filtrar solo Balears (codigos empiezan por 07)
+    df = df[df["DISTRITO"].astype(str).str.strip().str.startswith("07")].copy()
+    # Extraer CDIS (7 digitos) del campo DISTRITO ("0700101 Alegría-Dulantzi distrito 01")
+    df["CDIS"] = df["DISTRITO"].astype(str).str.strip().str[:7]
+    # Convertir kwh (viene como "3.507" con punto decimal)
+    df["kwh"] = pd.to_numeric(df["TOTAL"].astype(str).str.replace(".", ".", regex=False).str.replace(",", ".", regex=False), errors="coerce")
+    # Pivot percentiles: p10/p25/p50/p75/p90 a columnas
+    df["percentil"] = df["PERCENTIL"].str.extract(r"Percentil (\d+)").astype(int)
+    pivot = df.pivot_table(index="CDIS", columns="percentil", values="kwh", aggfunc="first").reset_index()
+    pivot.columns = ["CDIS"] + [f"consumo_p{p}_kwh" for p in pivot.columns[1:]]
+    return pivot
+
+
 def load_shapefile() -> gpd.GeoDataFrame:
     """Carga el shapefile procesado de Balears."""
     gdf = gpd.read_file(RAW / "secciones_balears.gpkg")
@@ -131,6 +180,14 @@ if __name__ == "__main__":
     ine_tur = load_ine_vivienda_turistica()
     print(f"INE vivienda turistica: {len(ine_tur)} periodos, ultimo: "
           f"{ine_tur.iloc[0]['periodo']} = {ine_tur.iloc[0]['pct_viviendas_turisticas']}%\n")
+
+    ine_mun = load_ine_vivienda_municipio()
+    print(f"INE viviendas por municipio (Balears): {len(ine_mun)} municipios, "
+          f"total: {ine_mun['viviendas_totales'].sum():,} viviendas\n")
+
+    ine_dis = load_ine_consumo_distrito()
+    print(f"INE consumo por distrito (Balears): {len(ine_dis)} distritos, "
+          f"percentiles disponibles: {[c for c in ine_dis.columns if c.startswith('consumo_p')]}\n")
 
     gdf = load_shapefile()
     print(f"  Municipios: {gdf['NMUN'].nunique()}, "

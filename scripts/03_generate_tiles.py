@@ -34,7 +34,14 @@ def main() -> None:
         "airbnb_accommodates_total", "airbnb_revenue_total",
         "airbnb_hosts_unicos", "airbnb_con_licencia",
         "hut_registros", "hut_plazas", "hut_habitaciones",
-        "plazas_turisticas", "geometry",
+        "plazas_turisticas",
+        # INE Censo 2021 (viven en dataset tras Fase 3 mejora)
+        "viviendas_totales", "viviendas_vacias_pct_ccaa",
+        "viviendas_uso_esporadico_pct_ccaa", "viviendas_turisticas_pct_ccaa_2025M05",
+        "consumo_p10_kwh", "consumo_p25_kwh", "consumo_p50_kwh",
+        "consumo_p75_kwh", "consumo_p90_kwh",
+        "airbnb_listings_por_1000_viviendas",
+        "geometry",
     ]
     cols = [c for c in cols if c in gdf.columns]
     geojson_path = OUT / "dataset.geojson"

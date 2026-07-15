@@ -1,6 +1,6 @@
 # Estadisticas descriptivas - Cases Tancades
 
-Generado: 2026-07-14 11:44
+Generado: 2026-07-15 11:37
 
 
 ## Cobertura geografica
@@ -47,6 +47,26 @@ Detalle por municipio:
 - Establecimientos: **1,375**
 - Plazas: **14,935**
 
+## INE viviendas (Censo 2021, municipio)
+
+- Municipios con dato: **62**
+- Viviendas totales Balears: **1,300,622**
+
+Top 5 municipios por viviendas:
+
+- : 652,123 viviendas
+- Palma: 186,482 viviendas
+- Calvià: 36,492 viviendas
+- Manacor: 28,571 viviendas
+- Eivissa: 23,938 viviendas
+
+## INE consumo electrico (Censo 2021, distrito)
+
+- Distritos con dato: **116**
+- Mediana del percentil 50 (mediana de medianas): **3 kWh**
+- Percentil 10 (consumo bajo): **642 kWh**
+- Percentil 90 (consumo alto): **7 kWh**
+
 ## INE vivienda (CCAA Balears, base de referencia)
 
 - Viviendas totales: **652,123**
@@ -54,7 +74,7 @@ Detalle por municipio:
 - % uso esporadico: **6.9%** (~44,996)
 - % vivienda turistica (2025M05): **3.74%** (~24,389)
 
-> Limitacion: estos porcentajes son a nivel CCAA, no seccion censal. Ver /metodologia.
+> Limitacion: estos porcentajes son a nivel CCAA, no seccion censal ni municipio. Ver /metodologia.
 
 
 ## Brecha legal vs realidad (insight narrativo)

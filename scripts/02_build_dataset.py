@@ -6,6 +6,8 @@ Entradas:
 - data/raw/airbnb_*_listings.csv.gz (Mallorca, Menorca)
 - data/raw/hut_eivissa_2026-07-14.csv (HUT Eivissa por municipio)
 - data/raw/ibestat_formentera_2019.json (Formentera agregado)
+- data/raw/59531.csv (INE viviendas totales por municipio)
+- data/raw/59532.csv (INE percentiles consumo por distrito)
 
 Salidas:
 - data/output/dataset.parquet (tabla final)
@@ -87,6 +89,44 @@ def normalize_municipio(name: str) -> str:
         "SANTA EULARIA DES RIU": "Santa Eulària des Riu",
     }
     return mapping.get(upper, name)
+
+
+def load_ine_vivienda_municipio() -> pd.DataFrame:
+    """Carga INE Censo 2021 viviendas totales por municipio (tabla 59531).
+
+    Devuelve DataFrame con columnas: CMUN (5 digitos), NMUN, viviendas_totales.
+    """
+    df = pd.read_csv(RAW / "59531.csv", sep=";", encoding="latin1", low_memory=False)
+    df.columns = ["NAC", "CCAA", "PROV", "MUN", "INDICADOR", "TOTAL"]
+    df = df[df["PROV"].astype(str).str.contains("Balears", na=False, regex=False)].copy()
+    df = df[df["INDICADOR"] == "Viviendas totales"].copy()
+    df["CMUN"] = df["MUN"].astype(str).str.strip().str[:5]
+    df["NMUN"] = df["MUN"].astype(str).str.strip().str[6:]
+    df = df[df["CMUN"] != "07999"].copy()
+    df["viviendas_totales"] = pd.to_numeric(
+        df["TOTAL"].astype(str).str.replace(".", "", regex=False).str.replace(",", ".", regex=False),
+        errors="coerce",
+    ).fillna(0).astype(int)
+    return df[["CMUN", "NMUN", "viviendas_totales"]].reset_index(drop=True)
+
+
+def load_ine_consumo_distrito() -> pd.DataFrame:
+    """Carga INE Censo 2021 percentiles consumo eléctrico por distrito (tabla 59532).
+
+    Devuelve DataFrame con columnas: CDIS (7 digitos), consumo_p10_kwh, p25, p50, p75, p90.
+    """
+    df = pd.read_csv(RAW / "59532.csv", sep=";", encoding="latin1", low_memory=False)
+    df.columns = ["DISTRITO", "PERCENTIL", "TOTAL"]
+    df = df[df["DISTRITO"].astype(str).str.strip().str.startswith("07")].copy()
+    df["CDIS"] = df["DISTRITO"].astype(str).str.strip().str[:7]
+    df["kwh"] = pd.to_numeric(
+        df["TOTAL"].astype(str).str.replace(".", ".", regex=False).str.replace(",", ".", regex=False),
+        errors="coerce",
+    )
+    df["percentil"] = df["PERCENTIL"].str.extract(r"Percentil (\d+)").astype(int)
+    pivot = df.pivot_table(index="CDIS", columns="percentil", values="kwh", aggfunc="first").reset_index()
+    pivot.columns = ["CDIS"] + [f"consumo_p{p}_kwh" for p in pivot.columns[1:]]
+    return pivot
 
 
 def aggregate_hut_eivissa() -> pd.DataFrame:
@@ -172,7 +212,13 @@ def main() -> None:
     print(f"IBESTAT Formentera: {formentera.iloc[0]['hut_registros']:,} unidades, "
           f"{formentera.iloc[0]['hut_plazas']:,} plazas")
 
-    # 5) Merge con shapefile
+    # 5) INE Censo 2021 — viviendas totales por municipio + consumo por distrito
+    ine_mun = load_ine_vivienda_municipio()
+    ine_dis = load_ine_consumo_distrito()
+    print(f"INE viviendas municipio: {len(ine_mun)} municipios, total: {ine_mun['viviendas_totales'].sum():,}")
+    print(f"INE consumo distrito: {len(ine_dis)} distritos")
+
+    # 6) Merge con shapefile
     # Airbnb: secciones con datos
     airbnb_full = pd.concat([agg_mall, agg_men], ignore_index=True)
     gdf = secciones.merge(airbnb_full, on="CUSEC", how="left", suffixes=("", "_air"))
@@ -183,9 +229,15 @@ def main() -> None:
     # Formentera: una sola fila
     gdf = gdf.merge(formentera, on="NMUN", how="left", suffixes=("", "_for"))
 
+    # INE municipio (viviendas_totales): join por CMUN (5 chars)
+    gdf["CMUN"] = gdf["CUSEC"].astype(str).str[:5]
+    gdf = gdf.merge(ine_mun[["CMUN", "viviendas_totales"]], on="CMUN", how="left")
+
+    # INE distrito (consumo_p*_kwh): join por CDIS (7 chars)
+    gdf["CDIS"] = gdf["CUSEC"].astype(str).str[:7]
+    gdf = gdf.merge(ine_dis, on="CDIS", how="left")
+
     # Resolver columnas finales de isla/fuente/granularidad
-    # Para Mallorca/Menorca: ya viene de airbnb
-    # Para Eivissa/Formentera: viene del merge de hut
     gdf["isla_final"] = gdf["isla"].fillna(gdf["isla_eiv"]).fillna(gdf["isla_for"])
     gdf["fuente_final"] = gdf["fuente"].fillna(gdf["fuente_eiv"]).fillna(gdf["fuente_for"])
     gdf["granularidad_final"] = (
@@ -193,13 +245,10 @@ def main() -> None:
         .fillna(gdf["granularidad_eiv"])
         .fillna(gdf["granularidad_for"])
     )
-    # Fallback isla por CMUN para secciones rurales sin datos de turismo
     mask_no_isla = gdf["isla_final"].isna()
     gdf.loc[mask_no_isla, "isla_final"] = gdf.loc[mask_no_isla, "CMUN"].apply(cmun_to_isla)
     gdf.loc[mask_no_isla, "granularidad_final"] = "seccion_censal"
     gdf.loc[mask_no_isla, "fuente_final"] = "shapefile INE 2025 (sin datos de turismo)"
-    # Resolver hut_registros/hut_plazas: para Eivissa vienen del merge directo,
-    # para Formentera vienen con sufijo _for (porque el merge de Eivissa ya uso esos nombres).
     gdf["hut_registros_final"] = gdf["hut_registros"].fillna(gdf["hut_registros_for"])
     gdf["hut_plazas_final"] = gdf["hut_plazas"].fillna(gdf["hut_plazas_for"])
     if "hut_habitaciones_for" in gdf.columns:
@@ -220,7 +269,7 @@ def main() -> None:
         "hut_habitaciones_final": "hut_habitaciones",
     })
 
-    # Llenar NaN de columnas Airbnb con 0 (seccion existe pero sin listings)
+    # Llenar NaN de columnas Airbnb con 0
     airbnb_cols = [
         "airbnb_listings", "airbnb_entire_homes", "airbnb_accommodates_total",
         "airbnb_revenue_total", "airbnb_hosts_unicos", "airbnb_con_licencia",
@@ -234,27 +283,43 @@ def main() -> None:
         if c in gdf.columns:
             gdf[c] = gdf[c].fillna(0).astype(int)
 
+    # Llenar NaN de viviendas_totales con 0 (fallback CCAA)
+    gdf["viviendas_totales"] = gdf["viviendas_totales"].fillna(0).astype(int)
+    # Llenar NaN de consumo percentiles con 0
+    for p in [10, 25, 50, 75, 90]:
+        col = f"consumo_p{p}_kwh"
+        if col in gdf.columns:
+            gdf[col] = gdf[col].fillna(0.0)
+
     # Viviendas INE a nivel CCAA (documentado en /metodologia)
     gdf["viviendas_vacias_pct_ccaa"] = 16.2
     gdf["viviendas_uso_esporadico_pct_ccaa"] = 6.9
     gdf["viviendas_turisticas_pct_ccaa_2025M05"] = 3.74
 
-    # Total plazas turisticas por seccion (para color en mapa)
+    # Total plazas turisticas por seccion
     gdf["plazas_turisticas"] = gdf["airbnb_accommodates_total"].fillna(0) + gdf["hut_plazas"].fillna(0)
-    # Para Eivissa/Formentera las plazas se asignan a nivel municipio;
-    # al pintar por seccion, la division muestra una densidad "diluida" de municipio.
-    # Para visualizacion limpia, en el frontend se usara granularidad_final para escalar.
+
+    # Proxy: presion Airbnb per capita (listings / 1000 viviendas del municipio)
+    # Solo donde hay datos significativos (>10 viviendas)
+    gdf["airbnb_listings_por_1000_viviendas"] = np.where(
+        gdf["viviendas_totales"] > 10,
+        gdf["airbnb_listings"] / gdf["viviendas_totales"] * 1000,
+        0,
+    )
+
+    # Drop CDIS, CMUN (helpers de join)
+    gdf = gdf.drop(columns=["CMUN", "CDIS"], errors="ignore")
 
     # Guardar
     gdf.to_file(OUT / "dataset.gpkg", driver="GPKG")
     print(f"\nGuardado dataset.gpkg: {len(gdf)} filas, {len(gdf.columns)} columnas")
 
-    # Parquet (sin geometria, geometria ya en gpkg)
+    # Parquet (sin geometria)
     df = pd.DataFrame(gdf.drop(columns="geometry"))
     df.to_parquet(OUT / "dataset.parquet", index=False)
     print(f"Guardado dataset.parquet: {len(df)} filas")
 
-    # JSON simplificado para web (sin geometria, agregados por isla)
+    # JSON simplificado para web
     resumen_isla = (
         gdf.groupby("isla")
         .agg(
@@ -275,8 +340,6 @@ def main() -> None:
     print(f"Guardado dataset_web.json")
 
     # Stats descriptivas
-    # Para HUT Eivissa: usar el dataframe agregado directamente (los totales del merge por seccion
-    # no son sumables: misma valor se replica por seccion del mismo municipio).
     hut_eiv_total = int(hut_eiv["hut_registros"].sum())
     hut_eiv_plazas = int(hut_eiv["hut_plazas"].sum())
     formentera_total = int(formentera["hut_registros"].iloc[0])
@@ -317,16 +380,32 @@ def main() -> None:
     stats.append(f"- Establecimientos: **{formentera_total:,}**")
     stats.append(f"- Plazas: **{formentera_plazas:,}**")
 
+    stats.append(f"\n## INE viviendas (Censo 2021, municipio)\n")
+    total_viviendas = int(ine_mun["viviendas_totales"].sum())
+    stats.append(f"- Municipios con dato: **{len(ine_mun)}**")
+    stats.append(f"- Viviendas totales Balears: **{total_viviendas:,}**")
+    stats.append(f"\nTop 5 municipios por viviendas:\n")
+    for _, row in ine_mun.nlargest(5, "viviendas_totales").iterrows():
+        stats.append(f"- {row['NMUN']}: {row['viviendas_totales']:,} viviendas")
+
+    stats.append(f"\n## INE consumo electrico (Censo 2021, distrito)\n")
+    stats.append(f"- Distritos con dato: **{len(ine_dis)}**")
+    p50_mediana = float(ine_dis["consumo_p50_kwh"].median())
+    stats.append(f"- Mediana del percentil 50 (mediana de medianas): **{p50_mediana:,.0f} kWh**")
+    p10_mediana = float(ine_dis["consumo_p10_kwh"].median())
+    p90_mediana = float(ine_dis["consumo_p90_kwh"].median())
+    stats.append(f"- Percentil 10 (consumo bajo): **{p10_mediana:,.0f} kWh**")
+    stats.append(f"- Percentil 90 (consumo alto): **{p90_mediana:,.0f} kWh**")
+
     stats.append(f"\n## INE vivienda (CCAA Balears, base de referencia)\n")
     stats.append(f"- Viviendas totales: **652,123**")
     stats.append(f"- % viviendas vacias: **16.2%** (~105,564)")
     stats.append(f"- % uso esporadico: **6.9%** (~44,996)")
     stats.append(f"- % vivienda turistica (2025M05): **3.74%** (~24,389)")
-    stats.append(f"\n> Limitacion: estos porcentajes son a nivel CCAA, no seccion censal. "
+    stats.append(f"\n> Limitacion: estos porcentajes son a nivel CCAA, no seccion censal ni municipio. "
                  f"Ver /metodologia.\n")
 
     stats.append(f"\n## Brecha legal vs realidad (insight narrativo)\n")
-    # Mallorca: Airbnb listings (no todos son legales, pero la mayoria no)
     mall_airbnb = int(airbnb_total[airbnb_total["isla"] == "Mallorca"]["airbnb_listings"].sum())
     men_airbnb = int(airbnb_total[airbnb_total["isla"] == "Menorca"]["airbnb_listings"].sum())
     stats.append(f"- Mallorca: ~{mall_airbnb:,} listings activos en Airbnb vs. ~24,389 plazas turisticas legales declaradas en CCAA")

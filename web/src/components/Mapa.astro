@@ -7,7 +7,7 @@ interface VariableOption {
   value: string;
   labelKey: string;
   descKey: string;
-  scope: "airbnb" | "hut";
+  scope: "airbnb" | "hut" | "all";
 }
 
 const variableOptions: VariableOption[] = [
@@ -15,8 +15,11 @@ const variableOptions: VariableOption[] = [
   { value: "airbnb_entire_homes", labelKey: "map.variable_airbnb_entire", descKey: "map.variable_airbnb_entire_desc", scope: "airbnb" },
   { value: "airbnb_revenue_total", labelKey: "map.variable_airbnb_revenue", descKey: "map.variable_airbnb_revenue_desc", scope: "airbnb" },
   { value: "airbnb_con_licencia", labelKey: "map.variable_airbnb_con_licencia", descKey: "map.variable_airbnb_con_licencia_desc", scope: "airbnb" },
+  { value: "airbnb_per_1000", labelKey: "map.variable_airbnb_per_1000", descKey: "map.variable_airbnb_per_1000_desc", scope: "airbnb" },
   { value: "hut_plazas", labelKey: "map.variable_hut_plazas", descKey: "map.variable_hut_plazas_desc", scope: "hut" },
   { value: "hut_registros", labelKey: "map.variable_hut_registros", descKey: "map.variable_hut_registros_desc", scope: "hut" },
+  { value: "viviendas_totales", labelKey: "map.variable_viviendas_totales", descKey: "map.variable_viviendas_totales_desc", scope: "all" },
+  { value: "consumo_p50_kwh", labelKey: "map.variable_consumo_p50", descKey: "map.variable_consumo_p50_desc", scope: "all" },
 ];
 
 const popupTitleTmpl = t(lang, "map.popup_title");
@@ -113,6 +116,9 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     con_licencia: lang === "es" ? "Con licencia Airbnb" : "Amb llicència Airbnb",
     hut_registros: lang === "es" ? "Registros HUT" : "Registres HUT",
     hut_plazas: lang === "es" ? "Plazas HUT" : "Places HUT",
+    viviendas_totales: lang === "es" ? "Viviendas totales" : "Habitatges totals",
+    consumo_p50: lang === "es" ? "Mediana consumo kWh" : "Mediana consum kWh",
+    airbnb_per_1000: lang === "es" ? "Airbnb / 1000 viv." : "Airbnb / 1000 hab.",
     granularitat: lang === "es" ? "Granularidad" : "Granularitat",
     seccion_censal: lang === "es" ? "sección censal" : "secció censal",
     municipio: "municipi",
@@ -121,6 +127,8 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     legend_applies_to: lang === "es" ? "Aplica a" : "Aplica a",
     legend_islands_mm: lang === "es" ? "Mallorca / Menorca (sección censal)" : "Mallorca / Menorca (secció censal)",
     legend_islands_ef: lang === "es" ? "Ibiza / Formentera (municipio)" : "Eivissa / Formentera (municipi)",
+    legend_islands_all_mun: lang === "es" ? "Todas (municipio)" : "Totes (municipi)",
+    legend_islands_all_dis: lang === "es" ? "Todas (distrito)" : "Totes (districte)",
   };
 
   const DESC: Record<string, string> = {
@@ -138,8 +146,12 @@ const popupTitleTmpl = t(lang, "map.popup_title");
         : "Suma estimada dels ingressos dels darrers 365 dies per secció",
     airbnb_con_licencia:
       lang === "es"
-        ? "Listings con campo `license` rellenado (autorreportado, no validado)"
+        ? "Listings con son campo `license` rellenado (autorreportado, no validado)"
         : "Listings amb camp `license` emplenat (autorreportat, no validat)",
+    airbnb_per_1000:
+      lang === "es"
+        ? "Listings Airbnb por cada 1000 viviendas del municipio"
+        : "Listings Airbnb per cada 1000 habitatges del municipi",
     hut_plazas:
       lang === "es"
         ? "Plazas registradas en HUT del Consell d'Eivissa (municipio)"
@@ -148,10 +160,18 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       lang === "es"
         ? "Número de registros HUT activos (municipio)"
         : "Nombre de registres HUT actius (municipi)",
+    viviendas_totales:
+      lang === "es"
+        ? "Total de viviendas por municipio (Censo 2021, replicado a todas las secciones del municipio)"
+        : "Total d'habitatges per municipi (Cens 2021, replicat a totes les seccions del municipi)",
+    consumo_p50_kwh:
+      lang === "es"
+        ? "Percentil 50 de consumo eléctrico anual por distrito (Censo 2021)"
+        : "Percentil 50 de consum elèctric anual per districte (Cens 2021)",
   };
 
   const LAYERS: Record<string, {
-    scope: "airbnb" | "hut";
+    scope: "airbnb" | "hut" | "all";
     field: string;
     colorExpr: any;
     stops: number[];
@@ -239,6 +259,45 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       desc: DESC.hut_registros,
       appliesTo: T.legend_islands_ef,
     },
+    airbnb_per_1000: {
+      scope: "airbnb",
+      field: "airbnb_listings_por_1000_viviendas",
+      colorExpr: [
+        "step", ["coalesce", ["get", "airbnb_listings_por_1000_viviendas"], 0],
+        "#ede9fe", 5, "#c4b5fd", 20, "#a78bfa", 50, "#8b5cf6", 100, "#6d28d9",
+      ],
+      stops: [0, 5, 20, 50, 100],
+      colors: ["#ede9fe", "#c4b5fd", "#a78bfa", "#8b5cf6", "#6d28d9", "#6d28d9"],
+      label: T.airbnb_per_1000,
+      desc: DESC.airbnb_per_1000,
+      appliesTo: T.legend_islands_mm,
+    },
+    viviendas_totales: {
+      scope: "all",
+      field: "viviendas_totales",
+      colorExpr: [
+        "step", ["coalesce", ["get", "viviendas_totales"], 0],
+        "#dcfce7", 500, "#bbf7d0", 2000, "#86efac", 5000, "#22c55e", 15000, "#14532d",
+      ],
+      stops: [0, 500, 2000, 5000, 15000],
+      colors: ["#dcfce7", "#bbf7d0", "#86efac", "#22c55e", "#14532d", "#14532d"],
+      label: T.viviendas_totales,
+      desc: DESC.viviendas_totales,
+      appliesTo: T.legend_islands_all_mun,
+    },
+    consumo_p50_kwh: {
+      scope: "all",
+      field: "consumo_p50_kwh",
+      colorExpr: [
+        "step", ["coalesce", ["get", "consumo_p50_kwh"], 0],
+        "#fee2e2", 1500, "#fecaca", 2500, "#fca5a5", 3500, "#ef4444", 4500, "#7f1d1d",
+      ],
+      stops: [0, 1500, 2500, 3500, 4500],
+      colors: ["#fee2e2", "#fecaca", "#fca5a5", "#ef4444", "#7f1d1d", "#7f1d1d"],
+      label: T.consumo_p50,
+      desc: DESC.consumo_p50_kwh,
+      appliesTo: T.legend_islands_all_dis,
+    },
   };
 
   const fmt = (n: number) =>
@@ -299,6 +358,16 @@ const popupTitleTmpl = t(lang, "map.popup_title");
           filter: ["match", ["get", "isla"], ["Eivissa", "Formentera"], true, false],
           paint: {
             "fill-color": LAYERS.hut_plazas.colorExpr,
+            "fill-opacity": 0.7,
+          },
+        },
+        {
+          id: "secciones-all-fill",
+          type: "fill",
+          source: "cases",
+          "source-layer": "cases",
+          paint: {
+            "fill-color": LAYERS.viviendas_totales.colorExpr,
             "fill-opacity": 0.7,
           },
         },
@@ -385,9 +454,16 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     if (cfg.scope === "airbnb") {
       map.setPaintProperty("secciones-airbnb-fill", "fill-color", cfg.colorExpr);
       map.setPaintProperty("secciones-hut-fill", "fill-color", NO_DATA_COLOR);
-    } else {
+      map.setPaintProperty("secciones-all-fill", "fill-color", NO_DATA_COLOR);
+    } else if (cfg.scope === "hut") {
       map.setPaintProperty("secciones-hut-fill", "fill-color", cfg.colorExpr);
       map.setPaintProperty("secciones-airbnb-fill", "fill-color", NO_DATA_COLOR);
+      map.setPaintProperty("secciones-all-fill", "fill-color", NO_DATA_COLOR);
+    } else {
+      // scope === "all": use the universal fill layer
+      map.setPaintProperty("secciones-all-fill", "fill-color", cfg.colorExpr);
+      map.setPaintProperty("secciones-airbnb-fill", "fill-color", NO_DATA_COLOR);
+      map.setPaintProperty("secciones-hut-fill", "fill-color", NO_DATA_COLOR);
     }
 
     updateLegend(cfg);
@@ -398,6 +474,8 @@ const popupTitleTmpl = t(lang, "map.popup_title");
   function formatTick(n: number): string {
     if (n === 0) return "0";
     if (activeVariable === "airbnb_revenue_total") return fmtMoney(n);
+    if (activeVariable === "consumo_p50_kwh") return `${fmt(n)} kWh`;
+    if (activeVariable === "airbnb_per_1000") return n.toFixed(0);
     return fmtShort(n);
   }
 
@@ -436,9 +514,11 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const toggleClu = document.getElementById("toggle-clusters") as HTMLInputElement;
     toggleChoro?.addEventListener("change", () => {
       const v = toggleChoro.checked ? "visible" : "none";
-      const activeFillId = LAYERS[activeVariable].scope === "airbnb"
-        ? "secciones-airbnb-fill"
-        : "secciones-hut-fill";
+      const scope = LAYERS[activeVariable].scope;
+      const activeFillId =
+        scope === "airbnb" ? "secciones-airbnb-fill" :
+        scope === "hut" ? "secciones-hut-fill" :
+        "secciones-all-fill";
       [activeFillId, "secciones-line"].forEach((id) => {
         if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", v);
       });
@@ -452,10 +532,13 @@ const popupTitleTmpl = t(lang, "map.popup_title");
 
     map.on("click", "secciones-airbnb-fill", (e) => openPopup(e, "airbnb"));
     map.on("click", "secciones-hut-fill", (e) => openPopup(e, "hut"));
+    map.on("click", "secciones-all-fill", (e) => openPopup(e, "all"));
     map.on("mouseenter", "secciones-airbnb-fill", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "secciones-airbnb-fill", () => { map.getCanvas().style.cursor = ""; });
     map.on("mouseenter", "secciones-hut-fill", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "secciones-hut-fill", () => { map.getCanvas().style.cursor = ""; });
+    map.on("mouseenter", "secciones-all-fill", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "secciones-all-fill", () => { map.getCanvas().style.cursor = ""; });
     map.on("click", "airbnb-clusters", async (e) => {
       const features = map.queryRenderedFeatures(e.point, { layers: ["airbnb-clusters"] });
       const clusterId = features[0]?.properties?.cluster_id;
@@ -469,7 +552,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     map.on("mouseleave", "airbnb-clusters", () => { map.getCanvas().style.cursor = ""; });
   });
 
-  function openPopup(e: maplibregl.MapLayerMouseEvent, kind: "airbnb" | "hut") {
+  function openPopup(e: maplibregl.MapLayerMouseEvent, kind: "airbnb" | "hut" | "all") {
     const f = e.features?.[0];
     if (!f) return;
     const p = f.properties ?? {};
@@ -485,6 +568,9 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const revenue = Number(p.airbnb_revenue_total ?? 0);
     const regs = Number(p.hut_registros ?? 0);
     const hPlazas = Number(p.hut_plazas ?? 0);
+    const viviendas = Number(p.viviendas_totales ?? 0);
+    const consumoP50 = Number(p.consumo_p50_kwh ?? 0);
+    const airbnbPer1000 = Number(p.airbnb_listings_por_1000_viviendas ?? 0);
     const lines: string[] = [];
     lines.push(`<div class="font-bold text-sm mb-1">${escape(title)}</div>`);
     lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.municipi}:</span> ${escape(String(p.NMUN ?? "—"))}</div>`);
@@ -493,6 +579,13 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const sectionTitle = (label: string) =>
       `<div class="text-[10px] uppercase tracking-wide text-stone-500 mt-2 mb-0.5 border-t border-stone-200 pt-1">${label}</div>`;
 
+    // Always show INE data (universal)
+    if (viviendas) {
+      lines.push(sectionTitle("INE (Cens 2021)"));
+      lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.viviendas_totales}:</span> <b>${fmt(viviendas)}</b></div>`);
+      if (consumoP50) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.consumo_p50}:</span> <b>${fmt(consumoP50)} kWh</b></div>`);
+    }
+
     if (kind === "airbnb") {
       lines.push(sectionTitle("Airbnb"));
       lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings}:</span> <b>${fmt(listings)}</b></div>`);
@@ -500,10 +593,19 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       if (conLic) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.con_licencia}:</span> <b>${fmt(conLic)}</b></div>`);
       if (plazas) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings} (plazas):</span> <b>${fmt(plazas)}</b></div>`);
       if (revenue) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.revenue}:</span> <b>${fmtMoney(revenue)}</b></div>`);
-    } else {
+      if (airbnbPer1000) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.airbnb_per_1000}:</span> <b>${airbnbPer1000.toFixed(1)}</b></div>`);
+    } else if (kind === "hut") {
       lines.push(sectionTitle("HUT"));
       lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_registros}:</span> <b>${fmt(regs)}</b></div>`);
       lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(hPlazas)}</b></div>`);
+    } else {
+      // kind === "all" — show both Airbnb and HUT data if present
+      if (listings || hPlazas) {
+        lines.push(sectionTitle("Llocs actius"));
+        if (listings) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.listings}:</span> <b>${fmt(listings)}</b></div>`);
+        if (regs) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_registros}:</span> <b>${fmt(regs)}</b></div>`);
+        if (hPlazas) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${T.hut_plazas}:</span> <b>${fmt(hPlazas)}</b></div>`);
+      }
     }
     lines.push(`<div class="text-[10px] text-stone-500 mt-1 italic">${T.granularitat}: ${granLabel}</div>`);
     new Popup({ closeButton: true })
