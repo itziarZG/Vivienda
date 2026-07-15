@@ -3,6 +3,5 @@
   "framework": "astro",
   "buildCommand": "astro build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --frozen-lockfile",
-  "nodeVersion": "22.x"
+  "installCommand": "pnpm install --frozen-lockfile"
 }
