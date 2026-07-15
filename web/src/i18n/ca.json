@@ -308,6 +308,7 @@
     "resumen_p3": "Aquestes xifres dibuixen un patró: **el 60% de les compravendes les fan persones jurídiques**, i **el 25% dels compradors ja no resideix a les illes** (era el 10% el 2007). El **46% dels propietaris** tenen més d'un habitatge. La taxa d'esforç (el percentatge d'ingressos que es dedica a habitatge) arriba al **29,35%** a les Balears, gairebé 10 punts per sobre de la mitjana nacional.",
     "resumen_p4": "L'informe conclou que **a les Balears sobren pisos** — el dèficit no és de construcció, sinó d'accés al mercat. El pla del Govern Balear (Llei 4/25 de Projectes Residencials Estratègics) aposta per construir 27.000 vivendes addicionals, però si les 208.470 vivendes detectades com a vacants o opaques al fisc s'incorporessin al mercat, la pressió sobre els preus baixaria.",
     "resumen_p5": "L'autora proposa mesures fiscals (impostos progressius a vivendes vacants en mans de grans tenidors), una nova llei hipotecària (subhasta obligatòria i cancel·lació total del deute amb la dació en pagament), i un control estricte de l'alquiler turístic. La conclusió és clara: la solució a la crisi de l'habitatge a les Balears **no és construir més, sinó mobilitzar el que ja existeix**.",
+    "resumen_p6": "Les dades del Col·legi Oficial d'Arquitectes de les Illes Balears (COAIB, observatori semestral juliol 2025) confirmen aquesta dinàmica: en el primer semestre de 2025 es visaren **4.311 habitatges de nova creació** (+34,68% interanual), però les **vivendes protegides van caure un 33,87%**. És a dir, es construeix més, però la proporció d'habitatge assequible baixa. La pròpia memòria del COAIB conclou: 'la promoció d'habitatge lliure no podrà solucionar l'escassetat d'habitatge per a la població que més la pateix'.",
     "cifras_title": "Cifres clau de l'informe",
     "cifras_intro": "Aquestes són les xifres més impactants de l'anàlisi. Totes amb atribució completa a (Holm, 2025) o a la font original.",
     "cifras": [
@@ -320,7 +321,9 @@
       { "value": "19,1 €/m²", "label": "Preu mitjà del lloguer (2025)", "source": "Idealista" },
       { "value": "32.606", "label": "Habitatges turístics reconeguts (>5% del parc censat, sense comptar els il·legals)", "source": "INE (2025M05)" },
       { "value": "29,35%", "label": "Taxa d'esforç econòmic: percentatge d'ingressos dedicat a habitatge (2023)", "source": "INE / Ministerio de Transportes" },
-      { "value": "60% / 25%", "label": "Compradors persones jurídiques / compradors no residents", "source": "INE 2024 / Ministerio de Transportes" }
+      { "value": "60% / 25%", "label": "Compradors persones jurídiques / compradors no residents", "source": "INE 2024 / Ministerio de Transportes" },
+      { "value": "+34,68%", "label": "Augment interanual d'habitatges de nova creació visats (1r semestre 2025)", "source": "COAIB, observatori semestral juliol 2025" },
+      { "value": "-33,87%", "label": "Caiguda interanual d'habitatges protegits visats (1r semestre 2025)", "source": "COAIB, observatori semestral juliol 2025" }
     ],
     "fuentes_title": "Fonts utilitzades per l'informe",
     "fuentes_intro": "L'informe combina dades oficials amb recerca específica via VPN per evitar el filtratge geogràfic dels portals d'alquiler turístic.",
@@ -331,7 +334,8 @@
       { "name": "Holidu.dk (Dinamarca)", "desc": "Recerca amb VPN: 11.075 habitatges oferts" },
       { "name": "Hometogo.se (Suècia)", "desc": "Recerca amb VPN: 38.036 habitatges oferts" },
       { "name": "Feriebolig-spania.no (Noruega)", "desc": "Recerca amb VPN: 12.787 cases de vacances" },
-      { "name": "Hometogo.de (Alemanya)", "desc": "Recerca amb VPN: 40.699 ofertes" }
+      { "name": "Hometogo.de (Alemanya)", "desc": "Recerca amb VPN: 40.699 ofertes" },
+      { "name": "COAIB - Col·legi Oficial d'Arquitectes de les Illes Balears", "desc": "Observatori semestral juliol 2025: estadístiques de visat d'obra nova (per tipologia, demarcació, ús). Valida la tendència de construcció sense resolució de l'escassetat." }
     ],
     "autora_title": "Sobre l'autora i l'informe",
     "autora_p1": "**Lic. Emma C. Holm** ha elaborat l'informe 'Crisis de la vivienda en Baleares' entre desembre 2025 i gener 2026, amb dades oficials de l'INE, el Ministeri de Transports i la Conselleria d'Habitatge, combinades amb recerca específica en portals d'alquiler turístic estrangers. L'informe inclou anàlisi, conclusions i propostes.",
