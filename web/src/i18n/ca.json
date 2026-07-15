@@ -97,6 +97,17 @@
     "legend_islands_all_municipio": "Totes (municipi)",
     "legend_islands_all_distrito": "Totes (districte)",
     "legend_islands_mallorca_menorca_only": "Només Mallorca / Menorca (cal Airbnb per calcular)",
+    "consumo_distribucion_title": "Distribució del consum elèctric a les Balears (Cens 2021)",
+    "consumo_distribucion_intro": "Aquestes dades provenen de l'informe Holm 2025, basat en l'INE 59531. Són a nivell de **tota la comunitat autònoma** (no per municipi), perquè el tram de consum s'agrega al nivell de secció censal a la publicació original. Per això apareixen com a context al costat del mapa, no com a capa pintable.",
+    "consumo_distribucion_total_label": "Total d'habitatges a Balears",
+    "consumo_distribucion_footer": "Font: INE, Cens de Població i Vivendes 2021, taula 59531. Interpretació: el 16,2% d'habitatges amb consum 0 són probablement vacants; el 12,4% amb consum < 1.000 kWh són probablement ús esporàdic (2a residència o estacional); només el 71% té consum estable. (Holm, 2025)",
+    "consumo_distribucion_buckets": [
+      { "label": "Consum 0 (sense subministrament)", "viviendas": 105632, "pct": 16.2, "interpretacion": "<strong>Vacants reals</strong>: habitatges sense contracte de llum actiu. Són el gruix de la bossa de pisos buits." },
+      { "label": "Menys de 250 kWh/any", "viviendas": 13466, "pct": 2.1, "interpretacion": "<strong>Consum molt baix</strong>: ús testimonial (persones grans que quasi no viuen a la casa, o visites molt esporàdiques)." },
+      { "label": "Entre 251 i 1.000 kWh/any", "viviendas": 67202, "pct": 10.3, "interpretacion": "<strong>Ús esporàdic</strong>: 2a residència de temporada (sobretot estiu). Aquesta bossa xuta amb el turisme." },
+      { "label": "Entre 1.001 i 4.000 kWh/any", "viviendas": 298871, "pct": 45.8, "interpretacion": "<strong>Consum mitjà</strong>: residència habitual estable. La mediana (2.869 kWh) cau en aquesta banda." },
+      { "label": "Més de 4.000 kWh/any", "viviendas": 166952, "pct": 25.6, "interpretacion": "<strong>Consum alt</strong>: família nombrosa, AC intensiu, o doble ús (residencial + part del dia com a oficina)." }
+    ],
     "legend_empty": "Sense dades per a aquesta variable en aquesta illa",
     "legend_airbnb_title": "Mallorca / Menorca",
     "legend_airbnb_desc": "Listings actius a Airbnb per secció censal",
