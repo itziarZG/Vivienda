@@ -83,6 +83,8 @@
     "variable_hut_registros_desc": "Nombre de registres HUT actius (municipi)",
     "variable_viviendas_totales": "Habitatges totals (INE)",
     "variable_viviendas_totales_desc": "Total d'habitatges per municipi (Cens 2021, replicat a totes les seccions del municipi)",
+    "variable_viviendas_vacantes": "Habitatges vacants (estimació per municipi)",
+    "variable_viviendas_vacantes_desc": "Estimació del nombre d'habitatges vacants per municipi, calculada com el 16,2% del total (taxa CCAA de l'INE, Cens 2021). És un proxy: la taxa real varia per municipi (més alta a zones turístiques). Total Balears: 105.632 vacants.",
     "variable_consumo_p50": "Mediana consum elèctric (kWh)",
     "variable_consumo_p50_desc": "Percentil 50 de consum elèctric anual per districte (Cens 2021). Mediana del que consumeix una llar al districte.",
     "variable_consumo_p10_muy_bajo": "Cola de baix consum (p10)",

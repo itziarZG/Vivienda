@@ -1,6 +1,6 @@
 # Estadisticas descriptivas - Cases Tancades
 
-Generado: 2026-07-15 12:24
+Generado: 2026-07-15 17:32
 
 
 ## Cobertura geografica

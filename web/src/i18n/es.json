@@ -83,6 +83,8 @@
     "variable_hut_registros_desc": "Número de registros HUT activos (municipio)",
     "variable_viviendas_totales": "Viviendas totales (INE)",
     "variable_viviendas_totales_desc": "Total de viviendas por municipio (Censo 2021, replicado en todas las secciones del municipio)",
+    "variable_viviendas_vacantes": "Viviendas vacantes (estimación por municipio)",
+    "variable_viviendas_vacantes_desc": "Estimación del número de viviendas vacantes por municipio, calculada como el 16,2% del total (tasa CCAA del INE, Censo 2021). Es un proxy: la tasa real varía por municipio (más alta en zonas turísticas). Total Baleares: 105.632 vacantes.",
     "variable_consumo_p50": "Mediana consumo eléctrico (kWh)",
     "variable_consumo_p50_desc": "Percentil 50 de consumo eléctrico anual por distrito (Censo 2021). Mediana de lo que consume un hogar en el distrito.",
     "variable_consumo_p10_muy_bajo": "Cola de bajo consumo (p10)",

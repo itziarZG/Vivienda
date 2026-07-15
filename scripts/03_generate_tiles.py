@@ -42,6 +42,7 @@ def main() -> None:
         "consumo_p75_kwh", "consumo_p90_kwh",
         "airbnb_listings_por_1000_viviendas",
         "ratio_p10_p50_consumo",
+        "viviendas_vacantes_estimadas",
         "geometry",
     ]
     cols = [c for c in cols if c in gdf.columns]
