@@ -84,6 +84,8 @@
     "variable_viviendas_totales_desc": "Total d'habitatges per municipi (Cens 2021, replicat a totes les seccions del municipi)",
     "variable_consumo_p50": "Mediana consum elèctric (kWh)",
     "variable_consumo_p50_desc": "Percentil 50 de consum elèctric anual per districte (Cens 2021). Mediana del que consumeix una llar al districte.",
+    "variable_ratio_p10_p50": "Ratio p10/p50 consum elèctric",
+    "variable_ratio_p10_p50_desc": "Quocient entre el percentil 10 i la mediana del consum elèctric del districte (Cens 2021). Baix (<0.3) = grup de cases amb consum molt baix, possibles vacants o segones residències. Alt (~0.6+) = distribució més homogènia d'ús residencial estable.",
     "variable_airbnb_per_1000": "Pressió Airbnb (per 1000 habitatges)",
     "variable_airbnb_per_1000_desc": "Listings Airbnb per cada 1000 habitatges del municipi. Mesura relativa de la pressió turística sobre el parc residencial.",
     "legend_title": "Llegenda",

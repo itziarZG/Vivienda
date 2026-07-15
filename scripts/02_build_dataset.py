@@ -291,6 +291,15 @@ def main() -> None:
         if col in gdf.columns:
             gdf[col] = gdf[col].fillna(0.0)
 
+    # Proxy de vivienda semi-vacia: ratio p10/p50 del consumo electrico del distrito
+    # p10 muy bajo en relacion a p50 = hay un grupo de casas con consumo muy bajo
+    # (vacias, segunda residencia, mayores que apenas usan electricidad)
+    gdf["ratio_p10_p50_consumo"] = np.where(
+        (gdf["consumo_p50_kwh"] > 0) & (gdf["consumo_p10_kwh"] > 0),
+        gdf["consumo_p10_kwh"] / gdf["consumo_p50_kwh"],
+        np.nan,
+    )
+
     # Viviendas INE a nivel CCAA (documentado en /metodologia)
     gdf["viviendas_vacias_pct_ccaa"] = 16.2
     gdf["viviendas_uso_esporadico_pct_ccaa"] = 6.9

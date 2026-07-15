@@ -86,6 +86,8 @@
     "variable_consumo_p50_desc": "Percentil 50 de consumo eléctrico anual por distrito (Censo 2021). Mediana de lo que consume un hogar en el distrito.",
     "variable_airbnb_per_1000": "Presión Airbnb (por 1000 viviendas)",
     "variable_airbnb_per_1000_desc": "Listings Airbnb por cada 1000 viviendas del municipio. Medida relativa de la presión turística sobre el parque residencial.",
+    "variable_ratio_p10_p50": "Ratio p10/p50 consumo eléctrico (proxy semi-vacío)",
+    "variable_ratio_p10_p50_desc": "Cociente entre el percentil 10 y la mediana del consumo eléctrico del distrito (Censo 2021). Bajo (<0.3) = hay un grupo numeroso de casas con consumo muy bajo, posibles vacías o segundas residencias. Alto (~0.6+) = distribución más homogénea de uso residencial estable.",
     "legend_title": "Leyenda",
     "legend_scale_label": "Escala",
     "legend_applies_to": "Aplica a",

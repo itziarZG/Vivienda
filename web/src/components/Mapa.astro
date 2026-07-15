@@ -20,6 +20,7 @@ const variableOptions: VariableOption[] = [
   { value: "hut_registros", labelKey: "map.variable_hut_registros", descKey: "map.variable_hut_registros_desc", scope: "hut" },
   { value: "viviendas_totales", labelKey: "map.variable_viviendas_totales", descKey: "map.variable_viviendas_totales_desc", scope: "all" },
   { value: "consumo_p50_kwh", labelKey: "map.variable_consumo_p50", descKey: "map.variable_consumo_p50_desc", scope: "all" },
+  { value: "ratio_p10_p50_consumo", labelKey: "map.variable_ratio_p10_p50", descKey: "map.variable_ratio_p10_p50_desc", scope: "all" },
 ];
 
 const popupTitleTmpl = t(lang, "map.popup_title");
@@ -168,6 +169,10 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       lang === "es"
         ? "Percentil 50 de consumo eléctrico anual por distrito (Censo 2021)"
         : "Percentil 50 de consum elèctric anual per districte (Cens 2021)",
+    ratio_p10_p50:
+      lang === "es"
+        ? "Cociente entre el percentil 10 y la mediana del consumo eléctrico del distrito (Censo 2021). Bajo (<0.3) = grupo de casas con consumo muy bajo (posibles vacías). Alto (~0.6+) = uso residencial estable."
+        : "Quocient entre el percentil 10 i la mediana del consum elèctric del districte (Cens 2021). Baix (<0.3) = grup de cases amb consum molt baix. Alt (~0.6+) = ús residencial estable.",
   };
 
   const LAYERS: Record<string, {
@@ -296,6 +301,19 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       colors: ["#fee2e2", "#fecaca", "#fca5a5", "#ef4444", "#7f1d1d", "#7f1d1d"],
       label: T.consumo_p50,
       desc: DESC.consumo_p50_kwh,
+      appliesTo: T.legend_islands_all_dis,
+    },
+    ratio_p10_p50_consumo: {
+      scope: "all",
+      field: "ratio_p10_p50_consumo",
+      colorExpr: [
+        "step", ["coalesce", ["get", "ratio_p10_p50_consumo"], 0],
+        "#7c2d12", 0.15, "#c2410c", 0.25, "#f97316", 0.35, "#fbbf24", 0.5, "#86efac",
+      ],
+      stops: [0, 0.15, 0.25, 0.35, 0.5],
+      colors: ["#7c2d12", "#c2410c", "#f97316", "#fbbf24", "#86efac", "#86efac"],
+      label: T.ratio_p10_p50,
+      desc: DESC.ratio_p10_p50,
       appliesTo: T.legend_islands_all_dis,
     },
   };
@@ -476,6 +494,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     if (activeVariable === "airbnb_revenue_total") return fmtMoney(n);
     if (activeVariable === "consumo_p50_kwh") return `${fmt(n)} kWh`;
     if (activeVariable === "airbnb_per_1000") return n.toFixed(0);
+    if (activeVariable === "ratio_p10_p50_consumo") return n.toFixed(2);
     return fmtShort(n);
   }
 
