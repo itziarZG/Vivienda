@@ -22,18 +22,18 @@ const popupTitleTmpl = t(lang, "map.popup_title");
 ---
 
 <section class="border-b border-stone-200 bg-white">
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+  <div class="max-w-6xl mx-auto px-4 py-2 sm:py-3">
+    <h1 class="text-lg sm:text-xl font-bold text-stone-900 leading-tight mb-0.5">
       {t(lang, "map.title")}
     </h1>
-    <p class="text-stone-600">{t(lang, "map.lead")}</p>
+    <p class="text-xs sm:text-sm text-stone-600 leading-snug">{t(lang, "map.lead")}</p>
   </div>
 </section>
 
 <div
   id="map-shell"
   class="relative w-full"
-  style="height: calc(100vh - 60px); min-height: 480px;"
+  style="height: clamp(420px, 62vh, 640px);"
   data-lang={lang}
   data-popup-title-tmpl={popupTitleTmpl}
 >
@@ -47,7 +47,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
   </div>
 
   <div
-    class="absolute top-3 left-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 w-64 max-w-[calc(100vw-1.5rem)]"
+    class="absolute top-3 left-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 w-64 max-w-[calc(100vw-1.5rem)] max-h-[calc(100%-1.5rem)] overflow-y-auto"
   >
     <div class="mb-2">
       <p class="text-xs font-medium text-stone-700 mb-2">
@@ -100,7 +100,7 @@ const popupTitleTmpl = t(lang, "map.popup_title");
   </div>
 
   <div
-    class="absolute bottom-3 right-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 max-w-xs text-xs"
+    class="absolute bottom-3 right-3 z-20 bg-white/95 backdrop-blur border border-stone-200 rounded-lg shadow-sm p-3 max-w-xs text-xs max-h-[calc(100%-1.5rem)] overflow-y-auto"
   >
     <p class="font-medium text-stone-800 mb-2">
       {t(lang, "map.legend_title")}
