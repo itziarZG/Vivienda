@@ -577,55 +577,111 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     const sectionTitle = (label: string) =>
       `<div class="text-[10px] uppercase tracking-wide text-stone-500 mt-2 mb-0.5 border-t border-stone-200 pt-1">${label}</div>`;
 
-    // Popup contextual segun el scope de la variable activa.
-    // Antes mostraba TODA la data siempre -> confuso.
     const cfg = LAYERS[activeVariable];
-    const row = (label: string, value: string) =>
-      `<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(label)}:</span> <b>${value}</b></div>`;
+    const cfgField = cfg?.field ?? "";
 
-    // Sección INE (solo si la variable activa es de scope "all" o es consumo/vivienda)
+    type FieldMeta = { label: { ca: string; es: string }; unit?: string; hint: { ca: string; es: string } };
+    const FIELD: Record<string, FieldMeta> = {
+      viviendas_totales: {
+        label: { ca: "Habitatges totals", es: "Viviendas totales" },
+        hint: { ca: "cens INE 2021, replicat a cada secció del municipi", es: "censo INE 2021, replicado en cada sección del municipio" },
+      },
+      viviendas_vacantes_estimadas: {
+        label: { ca: "Possibles vacants (estim.)", es: "Posibles vacantes (estim.)" },
+        hint: { ca: "estimació = 16,2% × habitatges (taxa CCAA)", es: "estimación = 16,2% × viviendas (tasa CCAA)" },
+      },
+      consumo_p10_kwh: {
+        label: { ca: "Consum p10", es: "Consumo p10" },
+        unit: "kWh/any",
+        hint: { ca: "el 10% de llars d'aquesta secció consumeix menys", es: "el 10% de hogares de esta sección consume menos" },
+      },
+      consumo_p50_kwh: {
+        label: { ca: "Mediana consum", es: "Mediana consumo" },
+        unit: "kWh/any",
+        hint: { ca: "mediana del consum anual de la secció", es: "mediana del consumo anual de la sección" },
+      },
+      ratio_p10_p50_consumo: {
+        label: { ca: "Ratio p10/p50", es: "Ratio p10/p50" },
+        hint: { ca: "<0,3 = quasi-vacant · >0,6 = ús estable", es: "<0,3 = casi vacía · >0,6 = uso estable" },
+      },
+      airbnb_listings: {
+        label: { ca: "Listings Airbnb", es: "Listings Airbnb" },
+        hint: { ca: "anuncis actius (juny 2026, Inside Airbnb)", es: "anuncios activos (junio 2026, Inside Airbnb)" },
+      },
+      airbnb_entire_homes: {
+        label: { ca: "Pisos sencers (entire home/apt)", es: "Pisos enteros (entire home/apt)" },
+        hint: { ca: "pisos complets — proxy de conversió residencial → turístic", es: "pisos completos — proxy de conversión residencial → turístico" },
+      },
+      airbnb_accommodates_total: {
+        label: { ca: "Places Airbnb", es: "Plazas Airbnb" },
+        hint: { ca: "places ofertes pels anuncis", es: "plazas ofertadas por los anuncios" },
+      },
+      airbnb_revenue_total: {
+        label: { ca: "Ingressos L365d", es: "Ingresos L365d" },
+        unit: "€",
+        hint: { ca: "suma estimada últims 365 dies per secció", es: "suma estimada últimos 365 días por sección" },
+      },
+      hut_registros: {
+        label: { ca: "Registres HUT", es: "Registros HUT" },
+        hint: { ca: "registres oficials (Consell d'Eivissa, juliol 2026)", es: "registros oficiales (Consell d'Eivissa, julio 2026)" },
+      },
+      hut_plazas: {
+        label: { ca: "Places HUT", es: "Plazas HUT" },
+        hint: { ca: "places legals ofertes (municipi)", es: "plazas legales ofertadas (municipio)" },
+      },
+    };
+
+    const row = (field: string, v: number) => {
+      if (!v) return "";
+      if (field === cfgField) return "";
+      const info = FIELD[field];
+      if (!info) return "";
+      const label = info.label[lang];
+      const unit = info.unit ? ` <span class="text-stone-400 text-[10px]">${escape(info.unit)}</span>` : "";
+      const hint = `<div class="text-[10px] text-stone-400 leading-snug">${escape(info.hint[lang])}</div>`;
+      return `<div class="mt-1.5"><span class="text-stone-500 text-xs">${escape(label)}:</span> <b class="text-xs">${fmt(v)}</b>${unit}${hint}</div>`;
+    };
+
+    const highlight = (field: string, v: number) => {
+      if (!v) return "";
+      const info = FIELD[field];
+      const label = info ? info.label[lang] : cfg?.label ?? field;
+      const unit = info?.unit ? ` <span class="text-stone-300 text-xs">${escape(info.unit)}</span>` : "";
+      const hint = info ? `<div class="text-[11px] text-stone-300 leading-snug mt-0.5">${escape(info.hint[lang])}</div>` : "";
+      return `<div class="bg-stone-900 text-stone-50 rounded p-2 mt-2"><div class="text-[11px] uppercase tracking-wide opacity-70">${escape(label)}</div><div class="text-xl font-bold">${fmt(v)}${unit}</div>${hint}</div>`;
+    };
+
     if (kind === "all") {
-      const viviendas = Number(p.viviendas_totales ?? 0);
-      const vacantes = Number(p.viviendas_vacantes_estimadas ?? 0);
-      const consumoP50 = Number(p.consumo_p50_kwh ?? 0);
-      const consumoP10 = Number(p.consumo_p10_kwh ?? 0);
-      const ratio = Number(p.ratio_p10_p50_consumo ?? 0);
-      lines.push(sectionTitle("INE (Cens 2021)"));
-      if (cfg) {
-        const val = Number(p[cfg.field] ?? 0);
-        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
-      }
-      if (viviendas) lines.push(row(T.viviendas_totales, fmt(viviendas)));
-      if (vacantes) lines.push(row(T.viviendas_vacantes, fmt(vacantes)));
-      if (consumoP10) lines.push(row(T.consumo_p10, `${fmt(consumoP10)} kWh`));
-      if (consumoP50 && consumoP50 !== consumoP10) lines.push(row(T.consumo_p50, `${fmt(consumoP50)} kWh`));
-      if (ratio && !Number.isNaN(ratio)) lines.push(row(T.ratio_p10_p50, ratio.toFixed(2)));
+      const cfgVal = Number(p[cfgField] ?? 0);
+      lines.push(highlight(cfgField, cfgVal));
+      const remaining = [
+        "viviendas_totales",
+        "viviendas_vacantes_estimadas",
+        "consumo_p10_kwh",
+        "consumo_p50_kwh",
+        "ratio_p10_p50_consumo",
+      ].filter((f) => f !== cfgField);
+      lines.push(sectionTitle("Més dades INE (Cens 2021)"));
+      for (const f of remaining) lines.push(row(f, Number(p[f] ?? 0)));
     } else if (kind === "airbnb") {
-      const listings = Number(p.airbnb_listings ?? 0);
-      const entire = Number(p.airbnb_entire_homes ?? 0);
-      const plazas = Number(p.airbnb_accommodates_total ?? 0);
-      const revenue = Number(p.airbnb_revenue_total ?? 0);
-      lines.push(sectionTitle("Airbnb (Inside Airbnb, juny 2026)"));
-      if (cfg) {
-        const val = Number(p[cfg.field] ?? 0);
-        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
-      }
-      if (listings) lines.push(row(T.listings, fmt(listings)));
-      if (entire) lines.push(row(T.entire_homes, fmt(entire)));
-      if (plazas) lines.push(row(T.listings + " (plazas)", fmt(plazas)));
-      if (revenue) lines.push(row(T.revenue, fmtMoney(revenue)));
+      const cfgVal = Number(p[cfgField] ?? 0);
+      lines.push(highlight(cfgField, cfgVal));
+      const remaining = [
+        "airbnb_listings",
+        "airbnb_entire_homes",
+        "airbnb_accommodates_total",
+        "airbnb_revenue_total",
+      ].filter((f) => f !== cfgField);
+      lines.push(sectionTitle("Més dades Airbnb (juny 2026)"));
+      for (const f of remaining) lines.push(row(f, Number(p[f] ?? 0)));
     } else if (kind === "hut") {
-      const regs = Number(p.hut_registros ?? 0);
-      const hPlazas = Number(p.hut_plazas ?? 0);
-      lines.push(sectionTitle("HUT (juliol 2026)"));
-      if (cfg) {
-        const val = Number(p[cfg.field] ?? 0);
-        if (val) lines.push(`<div class="text-xs text-stone-700"><span class="text-stone-500">${escape(cfg.label)}:</span> <b>${formatTick(val)}</b></div>`);
-      }
-      if (regs) lines.push(row(T.hut_registros, fmt(regs)));
-      if (hPlazas) lines.push(row(T.hut_plazas, fmt(hPlazas)));
+      const cfgVal = Number(p[cfgField] ?? 0);
+      lines.push(highlight(cfgField, cfgVal));
+      const remaining = ["hut_registros", "hut_plazas"].filter((f) => f !== cfgField);
+      lines.push(sectionTitle("Més dades HUT (juliol 2026)"));
+      for (const f of remaining) lines.push(row(f, Number(p[f] ?? 0)));
     }
-    lines.push(`<div class="text-[10px] text-stone-500 mt-1 italic">${T.granularitat}: ${granLabel}</div>`);
+    lines.push(`<div class="text-[10px] text-stone-500 mt-2 italic">${T.granularitat}: ${granLabel}</div>`);
     new Popup({ closeButton: true })
       .setLngLat(e.lngLat)
       .setHTML(lines.join(""))
