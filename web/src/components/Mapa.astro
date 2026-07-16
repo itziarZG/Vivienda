@@ -148,6 +148,10 @@ const popupTitleTmpl = t(lang, "map.popup_title");
     legend_islands_ef: lang === "es" ? "Ibiza / Formentera (municipio)" : "Eivissa / Formentera (municipi)",
     legend_islands_all_mun: lang === "es" ? "Todas (municipio)" : "Totes (municipi)",
     legend_islands_tourism: lang === "es" ? "Airbnb + HUT simultáneos" : "Airbnb + HUT simultanis",
+    popup_source_ine: lang === "es" ? "Fuente: INE, Censo 2021, tabla 59531" : "Font: INE, Cens 2021, taula 59531",
+    popup_source_airbnb: lang === "es" ? "Fuente: Inside Airbnb (Mallorca y Menorca, junio 2026)" : "Font: Inside Airbnb (Mallorca i Menorca, juny 2026)",
+    popup_source_hut_eivissa: lang === "es" ? "Fuente: Registro HUT, Consell d'Eivissa (julio 2026)" : "Font: Registre HUT, Consell d'Eivissa (juliol 2026)",
+    popup_source_ibestat_formentera: lang === "es" ? "Fuente: IBESTAT 2019 (agregado isla, Formentera)" : "Font: IBESTAT 2019 (agregat illa, Formentera)",
   };
 
   const DESC: Record<string, string> = {
@@ -681,7 +685,18 @@ const popupTitleTmpl = t(lang, "map.popup_title");
       lines.push(sectionTitle("Més dades HUT (juliol 2026)"));
       for (const f of remaining) lines.push(row(f, Number(p[f] ?? 0)));
     }
-    lines.push(`<div class="text-[10px] text-stone-500 mt-2 italic">${T.granularitat}: ${granLabel}</div>`);
+
+    let sourceKey = "popup_source_ine";
+    if (activeVariable === "pressio_turistica") {
+      if (kind === "airbnb") sourceKey = "popup_source_airbnb";
+      else if (kind === "hut") {
+        sourceKey = String(p.isla) === "Formentera"
+          ? "popup_source_ibestat_formentera"
+          : "popup_source_hut_eivissa";
+      }
+    }
+    lines.push(`<div class="text-[10px] text-stone-500 mt-1.5 leading-snug">${escape(T[sourceKey] ?? "")}</div>`);
+    lines.push(`<div class="text-[10px] text-stone-400 italic">${T.granularitat}: ${granLabel}</div>`);
     new Popup({ closeButton: true })
       .setLngLat(e.lngLat)
       .setHTML(lines.join(""))
