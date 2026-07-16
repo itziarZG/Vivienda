@@ -1,11 +1,13 @@
 ---
 export const prerender = false;
 import Base from "../layouts/Base.astro";
-import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+import { getLangFromAstroCookies, t, tArray, type Lang } from "../i18n";
 
 const lang: Lang = getLangFromAstroCookies(Astro.cookies);
 
 const description = t(lang, "informe.lead").replace(/\*\*/g, "");
+const cifras = tArray<{ value: string; label: string; source: string }>(lang, "informe.cifras");
+const fuentes = tArray<{ name: string; desc: string }>(lang, "informe.fuentes");
 ---
 
 <Base
@@ -57,7 +59,7 @@ const description = t(lang, "informe.lead").replace(/\*\*/g, "");
           </tr>
         </thead>
         <tbody>
-          {t(lang, "informe.cifras").map((c: { value: string; label: string; source: string }) => (
+          {cifras.map((c) => (
             <tr class="border-t border-stone-200">
               <td class="px-4 py-3 text-right tabular-nums font-bold text-orange-700 align-top">
                 {c.value}
@@ -82,7 +84,7 @@ const description = t(lang, "informe.lead").replace(/\*\*/g, "");
     </h2>
     <p class="text-stone-600 mb-6">{t(lang, "informe.fuentes_intro")}</p>
     <ul class="space-y-3">
-      {t(lang, "informe.fuentes").map((f: { name: string; desc: string }) => (
+      {fuentes.map((f) => (
         <li class="flex gap-3 text-sm">
           <span class="font-semibold text-stone-900 min-w-32 shrink-0">{f.name}</span>
           <span class="text-stone-700">{f.desc}</span>

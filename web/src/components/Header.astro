@@ -15,7 +15,6 @@ const isMap = path.startsWith("/mapa");
 const isMetod = path.startsWith("/metodologia");
 const isIslands = path.startsWith("/illes");
 const isData = path.startsWith("/dades");
-const isPress = path.startsWith("/premsa");
 const isAbout = path.startsWith("/qui-som");
 const isInforme = path.startsWith("/informe");
 
@@ -72,13 +71,6 @@ const navLink = (key: "home" | "map" | "methodology" | "islands" | "data" | "pre
         aria-current={isData ? "page" : undefined}
       >
         {t(lang, "nav.data")}
-      </a>
-      <a
-        href="/premsa"
-        class={navLink("press")}
-        aria-current={isPress ? "page" : undefined}
-      >
-        {t(lang, "nav.press")}
       </a>
       <a
         href="/qui-som"

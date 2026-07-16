@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 import Base from "../layouts/Base.astro";
-import { getLangFromAstroCookies, t, type Lang } from "../i18n";
+import { getLangFromAstroCookies, t, tArray, type Lang } from "../i18n";
 
 const lang: Lang = getLangFromAstroCookies(Astro.cookies);
 
@@ -14,7 +14,7 @@ interface Quoteable {
   source: string;
 }
 
-const quoteables: Quoteable[] = t(lang, "press.quoteables");
+const quoteables = tArray<Quoteable>(lang, "press.quoteables");
 
 const description = t(lang, "press.lead");
 ---

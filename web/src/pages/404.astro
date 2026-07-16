@@ -7,7 +7,7 @@ const lang: Lang = getLangFromAstroCookies(Astro.cookies);
 const description = t(lang, "site.description");
 ---
 
-<Base lang={lang} title="404" description={description}>
+<Base lang={lang} active="home" title="404" description={description}>
   <section class="max-w-2xl mx-auto px-4 py-24 text-center">
     <p class="text-8xl font-bold text-orange-700 mb-4">404</p>
     <h1 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
