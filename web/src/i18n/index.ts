@@ -25,16 +25,27 @@ export function getLangFromAstroCookies(
 
 export function t(lang: Lang, key: string): string {
   const dict = DICTS[lang];
+  const cur = resolveKey(dict, key);
+  return typeof cur === "string" ? cur : key;
+}
+
+export function tArray<T = unknown>(lang: Lang, key: string): T[] {
+  const dict = DICTS[lang];
+  const cur = resolveKey(dict, key);
+  return Array.isArray(cur) ? (cur as T[]) : [];
+}
+
+function resolveKey(dict: Dict, key: string): unknown {
   const parts = key.split(".");
   let cur: unknown = dict;
   for (const p of parts) {
     if (cur && typeof cur === "object" && p in (cur as Record<string, unknown>)) {
       cur = (cur as Record<string, unknown>)[p];
     } else {
-      return key;
+      return undefined;
     }
   }
-  return typeof cur === "string" ? cur : key;
+  return cur;
 }
 
 export function format(lang: Lang, key: string, vars: Record<string, string | number>): string {

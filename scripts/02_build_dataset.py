@@ -300,6 +300,10 @@ def main() -> None:
         np.nan,
     )
 
+    # Estimación de viviendas vacantes por municipio (proxy a la tasa CCAA del 16,2%).
+    # Sección censal hereda el valor del municipio.
+    gdf["viviendas_vacantes_estimadas"] = (gdf["viviendas_totales"] * 0.162).round().astype(int)
+
     # Viviendas INE a nivel CCAA (documentado en /metodologia)
     gdf["viviendas_vacias_pct_ccaa"] = 16.2
     gdf["viviendas_uso_esporadico_pct_ccaa"] = 6.9

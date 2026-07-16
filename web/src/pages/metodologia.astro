@@ -12,6 +12,7 @@ const lang: Lang = getLangFromAstroCookies(Astro.cookies);
       {t(lang, "methodology.title")}
     </h1>
     <p class="text-stone-600 text-lg">{t(lang, "methodology.lead")}</p>
+    <p class="text-sm text-stone-600 mt-4 italic" set:html={t(lang, "methodology.report_context")} />
   </section>
 
   <section class="max-w-4xl mx-auto px-4 py-6">
