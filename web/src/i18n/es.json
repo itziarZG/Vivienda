@@ -77,6 +77,8 @@
     "variable_pressio_turistica": "Presión turística",
     "variable_pressio_turistica_desc": "Cada isla tiene su fuente oficial. Mallorca y Menorca → Airbnb (Inside Airbnb, junio 2026). Eivissa → HUT legal (Consell d'Eivissa, julio 2026). Formentera → IBESTAT 2019 (única fuente pública disponible).",
     "popup_source_ine": "Fuente: INE, Censo de Población y Viviendas 2021, tabla 59531",
+    "layers_button": "Capas",
+    "consumo_footnote": "* Percentiles de consumo eléctrico del Censo 2021. Se actualizarán con el próximo Censo de Viviendas del INE (~3-4 años).",
     "popup_source_airbnb": "Fuente: Inside Airbnb (Mallorca y Menorca, junio 2026)",
     "popup_source_hut_eivissa": "Fuente: Registro HUT, Consell d'Eivissa (julio 2026)",
     "popup_source_ibestat_formentera": "Fuente: IBESTAT, establecimientos turísticos (2019, agregado isla)",
