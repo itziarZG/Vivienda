@@ -1,0 +1,126 @@
+---
+export const prerender = false;
+import Base from "../layouts/Base.astro";
+import { getLangFromAstroCookies, t, tArray, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromAstroCookies(Astro.cookies);
+
+const description = t(lang, "informe.lead").replace(/\*\*/g, "");
+const cifras = tArray<{ value: string; label: string; source: string }>(lang, "informe.cifras");
+const fuentes = tArray<{ name: string; desc: string }>(lang, "informe.fuentes");
+---
+
+<Base
+  lang={lang}
+  active="informe"
+  title={t(lang, "informe.title")}
+  description={description}
+>
+  <section class="bg-gradient-to-b from-orange-50 to-stone-50 border-b border-stone-200">
+    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16 text-center">
+      <p class="text-xs sm:text-sm font-medium text-orange-700 uppercase tracking-wider mb-3">
+        {t(lang, "informe.eyebrow")}
+      </p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
+        {t(lang, "informe.title")}
+      </h1>
+      <p class="text-base sm:text-lg text-stone-700 max-w-3xl mx-auto leading-relaxed">
+        {t(lang, "informe.lead")}
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6">
+      {t(lang, "informe.resumen_title")}
+    </h2>
+    <div class="prose prose-stone max-w-none space-y-4 text-stone-800 leading-relaxed">
+      <p set:html={t(lang, "informe.resumen_p1")} />
+      <p set:html={t(lang, "informe.resumen_p2")} />
+      <p set:html={t(lang, "informe.resumen_p3")} />
+      <p set:html={t(lang, "informe.resumen_p4")} />
+      <p set:html={t(lang, "informe.resumen_p5")} />
+      <p set:html={t(lang, "informe.resumen_p6")} />
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "informe.cifras_title")}
+    </h2>
+    <p class="text-stone-600 mb-6">{t(lang, "informe.cifras_intro")}</p>
+    <div class="overflow-x-auto border border-stone-200 rounded-lg bg-white">
+      <table class="w-full text-sm">
+        <thead class="bg-stone-100 text-stone-700">
+          <tr>
+            <th class="text-right px-4 py-2 font-medium w-32">Valor</th>
+            <th class="text-left px-4 py-2 font-medium">Indicador</th>
+            <th class="text-left px-4 py-2 font-medium hidden md:table-cell">Fuente</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cifras.map((c) => (
+            <tr class="border-t border-stone-200">
+              <td class="px-4 py-3 text-right tabular-nums font-bold text-orange-700 align-top">
+                {c.value}
+              </td>
+              <td class="px-4 py-3 text-stone-900">
+                {c.label}
+                <p class="md:hidden text-xs text-stone-500 mt-1">{c.source}</p>
+              </td>
+              <td class="px-4 py-3 text-stone-600 text-xs hidden md:table-cell">
+                {c.source}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
+      {t(lang, "informe.fuentes_title")}
+    </h2>
+    <p class="text-stone-600 mb-6">{t(lang, "informe.fuentes_intro")}</p>
+    <ul class="space-y-3">
+      {fuentes.map((f) => (
+        <li class="flex gap-3 text-sm">
+          <span class="font-semibold text-stone-900 min-w-32 shrink-0">{f.name}</span>
+          <span class="text-stone-700">{f.desc}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-4">
+      {t(lang, "informe.autora_title")}
+    </h2>
+    <div class="prose prose-stone max-w-none space-y-4 text-stone-800 leading-relaxed">
+      <p set:html={t(lang, "informe.autora_p1")} />
+      <p set:html={t(lang, "informe.autora_p2")} />
+      <p set:html={t(lang, "informe.autora_p3")} />
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-12 border-t border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold text-stone-900 mb-6 text-center">
+      {t(lang, "informe.cta_title")}
+    </h2>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a
+        href="/mapa"
+        class="inline-flex items-center justify-center px-6 py-3 bg-orange-700 text-white font-medium rounded hover:bg-orange-800 transition-colors"
+      >
+        {t(lang, "informe.cta_map")}
+      </a>
+      <a
+        href="/metodologia"
+        class="inline-flex items-center justify-center px-6 py-3 border border-stone-300 text-stone-800 font-medium rounded hover:bg-stone-100 transition-colors"
+      >
+        {t(lang, "informe.cta_methodology")}
+      </a>
+    </div>
+  </section>
+</Base>

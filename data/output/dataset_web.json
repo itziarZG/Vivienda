@@ -1,6 +1,28 @@
 {
   "resumen_por_isla": [
     {
+      "isla": "Eivissa",
+      "secciones": 76,
+      "airbnb_listings": 0,
+      "airbnb_entire_homes": 0,
+      "airbnb_revenue_total": 0,
+      "airbnb_hosts_unicos": 0,
+      "airbnb_con_licencia": 0,
+      "hut_registros": 32953,
+      "hut_plazas": 252243
+    },
+    {
+      "isla": "Formentera",
+      "secciones": 6,
+      "airbnb_listings": 0,
+      "airbnb_entire_homes": 0,
+      "airbnb_revenue_total": 0,
+      "airbnb_hosts_unicos": 0,
+      "airbnb_con_licencia": 0,
+      "hut_registros": 8250,
+      "hut_plazas": 89610
+    },
+    {
       "isla": "Mallorca",
       "secciones": 545,
       "airbnb_listings": 14644,
@@ -21,28 +43,6 @@
       "airbnb_con_licencia": 3379,
       "hut_registros": 0,
       "hut_plazas": 0
-    },
-    {
-      "isla": "Eivissa",
-      "secciones": 76,
-      "airbnb_listings": 0,
-      "airbnb_entire_homes": 0,
-      "airbnb_revenue_total": 0,
-      "airbnb_hosts_unicos": 0,
-      "airbnb_con_licencia": 0,
-      "hut_registros": 2364,
-      "hut_plazas": 18184
-    },
-    {
-      "isla": "Formentera",
-      "secciones": 6,
-      "airbnb_listings": 0,
-      "airbnb_entire_homes": 0,
-      "airbnb_revenue_total": 0,
-      "airbnb_hosts_unicos": 0,
-      "airbnb_con_licencia": 0,
-      "hut_registros": 1375,
-      "hut_plazas": 14935
     }
   ]
 }

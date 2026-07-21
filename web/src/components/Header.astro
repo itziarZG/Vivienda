@@ -4,7 +4,7 @@ import LanguageToggle from "./LanguageToggle.astro";
 
 interface Props {
   lang?: Lang;
-  active: "home" | "map" | "methodology" | "islands" | "data" | "press" | "about";
+  active: "home" | "map" | "methodology" | "islands" | "data" | "press" | "about" | "informe";
 }
 
 const { lang: langProp, active } = Astro.props;
@@ -15,10 +15,10 @@ const isMap = path.startsWith("/mapa");
 const isMetod = path.startsWith("/metodologia");
 const isIslands = path.startsWith("/illes");
 const isData = path.startsWith("/dades");
-const isPress = path.startsWith("/premsa");
 const isAbout = path.startsWith("/qui-som");
+const isInforme = path.startsWith("/informe");
 
-const navLink = (key: "home" | "map" | "methodology" | "islands" | "data" | "press" | "about") =>
+const navLink = (key: "home" | "map" | "methodology" | "islands" | "data" | "press" | "about" | "informe") =>
   `text-sm font-medium px-3 py-1.5 rounded transition-colors ${
     active === key
       ? "text-orange-700 bg-orange-50"
@@ -52,6 +52,13 @@ const navLink = (key: "home" | "map" | "methodology" | "islands" | "data" | "pre
         {t(lang, "nav.map")}
       </a>
       <a
+        href="/informe"
+        class={navLink("informe")}
+        aria-current={isInforme ? "page" : undefined}
+      >
+        {t(lang, "nav.informe")}
+      </a>
+      <a
         href="/illes"
         class={navLink("islands")}
         aria-current={isIslands ? "page" : undefined}
@@ -64,13 +71,6 @@ const navLink = (key: "home" | "map" | "methodology" | "islands" | "data" | "pre
         aria-current={isData ? "page" : undefined}
       >
         {t(lang, "nav.data")}
-      </a>
-      <a
-        href="/premsa"
-        class={navLink("press")}
-        aria-current={isPress ? "page" : undefined}
-      >
-        {t(lang, "nav.press")}
       </a>
       <a
         href="/qui-som"
